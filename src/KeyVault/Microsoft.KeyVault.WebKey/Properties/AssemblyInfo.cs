@@ -1,5 +1,5 @@
-ï»¿//
-// Copyright Â© Microsoft Corporation, All Rights Reserved
+//
+// Copyright © Microsoft Corporation, All Rights Reserved
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany( "Microsoft Corp." )]
 [assembly: AssemblyProduct("Microsoft.KeyVault.WebKey")]
-[assembly: AssemblyCopyright("Copyright Â© Microsoft Corp, 2014")]
+[assembly: AssemblyCopyright("Copyright © Microsoft Corp, 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -48,6 +48,6 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.18")]
-[assembly: AssemblyFileVersion("1.0.0.18")]
+// [assembly: AssemblyVersion("0.9.0.0*")]
+[assembly: AssemblyVersion("0.9.0.0")]
+[assembly: AssemblyFileVersion("0.0.1.0")]
