@@ -17,7 +17,6 @@
 
 using System;
 using System.Globalization;
-using System.Web;
 
 namespace Microsoft.Azure.KeyVault
 {

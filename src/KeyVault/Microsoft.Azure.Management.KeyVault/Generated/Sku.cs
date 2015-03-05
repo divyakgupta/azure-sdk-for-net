@@ -22,29 +22,36 @@
 using System;
 using System.Linq;
 
-namespace Microsoft.Azure.KeyVault.Internal
+namespace Microsoft.Azure.Management.KeyVault
 {
-    /// <summary>
-    /// Represents a key operation request.
-    /// </summary>
-    public partial class KeyOpRequestMessageWithRawJsonContent
+    public partial class Sku
     {
-        private string _rawJsonRequest;
+        private string _family;
         
         /// <summary>
         /// Optional.
         /// </summary>
-        public string RawJsonRequest
+        public string Family
         {
-            get { return this._rawJsonRequest; }
-            set { this._rawJsonRequest = value; }
+            get { return this._family; }
+            set { this._family = value; }
+        }
+        
+        private string _name;
+        
+        /// <summary>
+        /// Optional.
+        /// </summary>
+        public string Name
+        {
+            get { return this._name; }
+            set { this._name = value; }
         }
         
         /// <summary>
-        /// Initializes a new instance of the
-        /// KeyOpRequestMessageWithRawJsonContent class.
+        /// Initializes a new instance of the Sku class.
         /// </summary>
-        public KeyOpRequestMessageWithRawJsonContent()
+        public Sku()
         {
         }
     }

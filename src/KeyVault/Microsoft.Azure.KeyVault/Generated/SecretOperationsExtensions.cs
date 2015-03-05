@@ -23,9 +23,9 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.KeyVault.Internal;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
     /// Azure Key Vault client
@@ -36,16 +36,16 @@ namespace Microsoft.Azure.KeyVault
         /// Delete secret
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='secretIdentifier'>
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static SecretResponseMessage Delete(this ISecretOperations operations, string secretIdentifier)
+        public static SecretResponseMessageWithRawJsonContent Delete(this ISecretOperations operations, string secretIdentifier)
         {
             return Task.Factory.StartNew((object s) => 
             {
@@ -58,16 +58,16 @@ namespace Microsoft.Azure.KeyVault
         /// Delete secret
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='secretIdentifier'>
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static Task<SecretResponseMessage> DeleteAsync(this ISecretOperations operations, string secretIdentifier)
+        public static Task<SecretResponseMessageWithRawJsonContent> DeleteAsync(this ISecretOperations operations, string secretIdentifier)
         {
             return operations.DeleteAsync(secretIdentifier, CancellationToken.None);
         }
@@ -76,16 +76,16 @@ namespace Microsoft.Azure.KeyVault
         /// Get secret
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='secretIdentifier'>
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static SecretResponseMessage Get(this ISecretOperations operations, string secretIdentifier)
+        public static SecretResponseMessageWithRawJsonContent Get(this ISecretOperations operations, string secretIdentifier)
         {
             return Task.Factory.StartNew((object s) => 
             {
@@ -98,16 +98,16 @@ namespace Microsoft.Azure.KeyVault
         /// Get secret
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='secretIdentifier'>
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static Task<SecretResponseMessage> GetAsync(this ISecretOperations operations, string secretIdentifier)
+        public static Task<SecretResponseMessageWithRawJsonContent> GetAsync(this ISecretOperations operations, string secretIdentifier)
         {
             return operations.GetAsync(secretIdentifier, CancellationToken.None);
         }
@@ -116,7 +116,8 @@ namespace Microsoft.Azure.KeyVault
         /// Get
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -125,10 +126,9 @@ namespace Microsoft.Azure.KeyVault
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static ListSecretsResponseMessage List(this ISecretOperations operations, string vault, int? top)
+        public static SecretResponseMessageWithRawJsonContent List(this ISecretOperations operations, string vault, int? top)
         {
             return Task.Factory.StartNew((object s) => 
             {
@@ -141,7 +141,8 @@ namespace Microsoft.Azure.KeyVault
         /// Get
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -150,10 +151,9 @@ namespace Microsoft.Azure.KeyVault
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static Task<ListSecretsResponseMessage> ListAsync(this ISecretOperations operations, string vault, int? top)
+        public static Task<SecretResponseMessageWithRawJsonContent> ListAsync(this ISecretOperations operations, string vault, int? top)
         {
             return operations.ListAsync(vault, top, CancellationToken.None);
         }
@@ -162,16 +162,16 @@ namespace Microsoft.Azure.KeyVault
         /// Get
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='nextLink'>
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static ListSecretsResponseMessage ListNext(this ISecretOperations operations, string nextLink)
+        public static SecretResponseMessageWithRawJsonContent ListNext(this ISecretOperations operations, string nextLink)
         {
             return Task.Factory.StartNew((object s) => 
             {
@@ -184,16 +184,16 @@ namespace Microsoft.Azure.KeyVault
         /// Get
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='nextLink'>
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static Task<ListSecretsResponseMessage> ListNextAsync(this ISecretOperations operations, string nextLink)
+        public static Task<SecretResponseMessageWithRawJsonContent> ListNextAsync(this ISecretOperations operations, string nextLink)
         {
             return operations.ListNextAsync(nextLink, CancellationToken.None);
         }
@@ -202,7 +202,8 @@ namespace Microsoft.Azure.KeyVault
         /// Get
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -214,10 +215,9 @@ namespace Microsoft.Azure.KeyVault
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static ListSecretsResponseMessage ListVersions(this ISecretOperations operations, string vault, string secretName, int? top)
+        public static SecretResponseMessageWithRawJsonContent ListVersions(this ISecretOperations operations, string vault, string secretName, int? top)
         {
             return Task.Factory.StartNew((object s) => 
             {
@@ -230,7 +230,8 @@ namespace Microsoft.Azure.KeyVault
         /// Get
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -242,10 +243,9 @@ namespace Microsoft.Azure.KeyVault
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static Task<ListSecretsResponseMessage> ListVersionsAsync(this ISecretOperations operations, string vault, string secretName, int? top)
+        public static Task<SecretResponseMessageWithRawJsonContent> ListVersionsAsync(this ISecretOperations operations, string vault, string secretName, int? top)
         {
             return operations.ListVersionsAsync(vault, secretName, top, CancellationToken.None);
         }
@@ -254,16 +254,16 @@ namespace Microsoft.Azure.KeyVault
         /// Get
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='nextLink'>
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static ListSecretsResponseMessage ListVersionsNext(this ISecretOperations operations, string nextLink)
+        public static SecretResponseMessageWithRawJsonContent ListVersionsNext(this ISecretOperations operations, string nextLink)
         {
             return Task.Factory.StartNew((object s) => 
             {
@@ -276,16 +276,16 @@ namespace Microsoft.Azure.KeyVault
         /// Get
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='nextLink'>
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static Task<ListSecretsResponseMessage> ListVersionsNextAsync(this ISecretOperations operations, string nextLink)
+        public static Task<SecretResponseMessageWithRawJsonContent> ListVersionsNextAsync(this ISecretOperations operations, string nextLink)
         {
             return operations.ListVersionsNextAsync(nextLink, CancellationToken.None);
         }
@@ -294,7 +294,8 @@ namespace Microsoft.Azure.KeyVault
         /// Set secret
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='secretIdentifier'>
         /// Required.
@@ -303,10 +304,9 @@ namespace Microsoft.Azure.KeyVault
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static SecretResponseMessage Set(this ISecretOperations operations, string secretIdentifier, SecretRequestMessage request)
+        public static SecretResponseMessageWithRawJsonContent Set(this ISecretOperations operations, string secretIdentifier, SecretRequestMessageWithRawJsonContent request)
         {
             return Task.Factory.StartNew((object s) => 
             {
@@ -319,7 +319,8 @@ namespace Microsoft.Azure.KeyVault
         /// Set secret
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='secretIdentifier'>
         /// Required.
@@ -328,10 +329,9 @@ namespace Microsoft.Azure.KeyVault
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static Task<SecretResponseMessage> SetAsync(this ISecretOperations operations, string secretIdentifier, SecretRequestMessage request)
+        public static Task<SecretResponseMessageWithRawJsonContent> SetAsync(this ISecretOperations operations, string secretIdentifier, SecretRequestMessageWithRawJsonContent request)
         {
             return operations.SetAsync(secretIdentifier, request, CancellationToken.None);
         }
@@ -340,7 +340,8 @@ namespace Microsoft.Azure.KeyVault
         /// Update secret
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='secretIdentifier'>
         /// Required.
@@ -349,10 +350,9 @@ namespace Microsoft.Azure.KeyVault
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static SecretResponseMessage Update(this ISecretOperations operations, string secretIdentifier, UpdateSecretRequestMessage request)
+        public static SecretResponseMessageWithRawJsonContent Update(this ISecretOperations operations, string secretIdentifier, SecretRequestMessageWithRawJsonContent request)
         {
             return Task.Factory.StartNew((object s) => 
             {
@@ -365,7 +365,8 @@ namespace Microsoft.Azure.KeyVault
         /// Update secret
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.ISecretOperations.
+        /// Reference to the
+        /// Microsoft.Azure.KeyVault.Internal.ISecretOperations.
         /// </param>
         /// <param name='secretIdentifier'>
         /// Required.
@@ -374,10 +375,9 @@ namespace Microsoft.Azure.KeyVault
         /// Required.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public static Task<SecretResponseMessage> UpdateAsync(this ISecretOperations operations, string secretIdentifier, UpdateSecretRequestMessage request)
+        public static Task<SecretResponseMessageWithRawJsonContent> UpdateAsync(this ISecretOperations operations, string secretIdentifier, SecretRequestMessageWithRawJsonContent request)
         {
             return operations.UpdateAsync(secretIdentifier, request, CancellationToken.None);
         }

@@ -22,30 +22,13 @@
 using System;
 using System.Linq;
 
-namespace Microsoft.Azure.KeyVault.Internal
+namespace Microsoft.Azure.Management.KeyVault
 {
     /// <summary>
-    /// Represents a key operation request.
+    /// The Windows Azure management API provides a RESTful set of web services
+    /// that interact with Azure Key Vault.
     /// </summary>
-    public partial class KeyOpRequestMessageWithRawJsonContent
+    public static partial class KeyVaultManagementClientExtensions
     {
-        private string _rawJsonRequest;
-        
-        /// <summary>
-        /// Optional.
-        /// </summary>
-        public string RawJsonRequest
-        {
-            get { return this._rawJsonRequest; }
-            set { this._rawJsonRequest = value; }
-        }
-        
-        /// <summary>
-        /// Initializes a new instance of the
-        /// KeyOpRequestMessageWithRawJsonContent class.
-        /// </summary>
-        public KeyOpRequestMessageWithRawJsonContent()
-        {
-        }
     }
 }

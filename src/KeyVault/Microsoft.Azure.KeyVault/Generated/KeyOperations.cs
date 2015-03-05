@@ -29,9 +29,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Hyak.Common;
-using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.KeyVault.Internal;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
     /// Key REST APIs
@@ -53,7 +53,7 @@ namespace Microsoft.Azure.KeyVault
         
         /// <summary>
         /// Gets a reference to the
-        /// Microsoft.Azure.KeyVault.KeyVaultInternalClient.
+        /// Microsoft.Azure.KeyVault.Internal.KeyVaultInternalClient.
         /// </summary>
         public KeyVaultInternalClient Client
         {

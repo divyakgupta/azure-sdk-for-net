@@ -19,18 +19,22 @@
       <group targetFramework="net45">
         <reference file="Microsoft.Azure.KeyVault.dll" />
       </group>
+      <group targetFramework="net40">
+        <reference file="Microsoft.Azure.KeyVault.dll" />
+      </group>
     </references>
     <dependencies>
       <dependency id="Microsoft.Azure.Common" version="[2.0.3,3.0)" />
+      <dependency id="Microsoft.Azure.KeyVault.WebKey" version="[0.0.1,2.0)" />
     </dependencies>
   </metadata>
   <files>
-    <file src="KeyVault\**\*.cs" target="src" />
+    <file src="KeyVault\Microsoft.Azure.KeyVault\**\*.cs" target="src" />
     <file src="..\binaries\net45\Microsoft.Azure.KeyVault.dll" target="lib\net45" />
     <file src="..\binaries\net45\Microsoft.Azure.KeyVault.pdb" target="lib\net45" />
     <file src="..\binaries\net45\Microsoft.Azure.KeyVault.xml" target="lib\net45" />
-    <file src="..\binaries\net45\Microsoft.KeyVault.WebKey.dll" target="lib\net45" />
-    <file src="..\binaries\net45\Microsoft.KeyVault.WebKey.pdb" target="lib\net45" />
-    <file src="..\binaries\net45\Microsoft.KeyVault.WebKey.xml" target="lib\net45" />
+    <file src="..\binaries\net40\Microsoft.Azure.KeyVault.dll" target="lib\net40" />
+    <file src="..\binaries\net40\Microsoft.Azure.KeyVault.pdb" target="lib\net40" />
+    <file src="..\binaries\net40\Microsoft.Azure.KeyVault.xml" target="lib\net40" />
   </files>
 </package>

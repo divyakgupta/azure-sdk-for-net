@@ -20,48 +20,34 @@
 // code is regenerated.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Hyak.Common;
 using Microsoft.Azure;
-using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Management.KeyVault;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.Management.KeyVault
 {
     /// <summary>
     /// A standard service response including an HTTP status code and request
     /// ID.
     /// </summary>
-    public partial class ListSecretsResponseMessage : AzureOperationResponse
+    public partial class VaultGetResponse : AzureOperationResponse
     {
-        private string _nextLink;
+        private Vault _vault;
         
         /// <summary>
-        /// Optional.
+        /// Optional. Gets or sets the resource.
         /// </summary>
-        public string NextLink
+        public Vault Vault
         {
-            get { return this._nextLink; }
-            set { this._nextLink = value; }
-        }
-        
-        private IList<ListSecretResponseMessage> _value;
-        
-        /// <summary>
-        /// Optional.
-        /// </summary>
-        public IList<ListSecretResponseMessage> Value
-        {
-            get { return this._value; }
-            set { this._value = value; }
+            get { return this._vault; }
+            set { this._vault = value; }
         }
         
         /// <summary>
-        /// Initializes a new instance of the ListSecretsResponseMessage class.
+        /// Initializes a new instance of the VaultGetResponse class.
         /// </summary>
-        public ListSecretsResponseMessage()
+        public VaultGetResponse()
         {
-            this.Value = new LazyList<ListSecretResponseMessage>();
         }
     }
 }

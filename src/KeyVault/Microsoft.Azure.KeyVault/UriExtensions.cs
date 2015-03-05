@@ -1,8 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//
+// Copyright © Microsoft Corporation, All Rights Reserved
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS
+// OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+// ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A
+// PARTICULAR PURPOSE, MERCHANTABILITY OR NON-INFRINGEMENT.
+//
+// See the Apache License, Version 2.0 for the specific language
+// governing permissions and limitations under the License.
+
+using System;
 
 namespace Microsoft.Azure.KeyVault
 {
@@ -39,7 +52,7 @@ namespace Microsoft.Azure.KeyVault
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            return System.Uri.EscapeDataString(text).Replace("%20", "+");
+            return Uri.EscapeDataString(text).Replace("%20", "+");
         }
 
         /// <summary>
@@ -56,7 +69,7 @@ namespace Microsoft.Azure.KeyVault
             // plus literals are encoded as %2b normally so this should be safe
             text = text.Replace("+", " ");
 
-            return System.Uri.UnescapeDataString(text);
+            return Uri.UnescapeDataString(text);
         }
     }
 }

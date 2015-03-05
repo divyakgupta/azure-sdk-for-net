@@ -23,38 +23,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hyak.Common;
-using Microsoft.Azure.KeyVault;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.Management.KeyVault
 {
-    public partial class SecretRequestMessage
+    public partial class CreateOrUpdateBase
     {
-        private SecretAttributes _attributes;
+        private string _location;
         
         /// <summary>
-        /// Optional.
+        /// Required. Gets or sets the location of the resource.
         /// </summary>
-        public SecretAttributes Attributes
+        public string Location
         {
-            get { return this._attributes; }
-            set { this._attributes = value; }
-        }
-        
-        private string _contentType;
-        
-        /// <summary>
-        /// Optional.
-        /// </summary>
-        public string ContentType
-        {
-            get { return this._contentType; }
-            set { this._contentType = value; }
+            get { return this._location; }
+            set { this._location = value; }
         }
         
         private IDictionary<string, string> _tags;
         
         /// <summary>
-        /// Optional.
+        /// Required. Gets or sets the tags associated with the request.
         /// </summary>
         public IDictionary<string, string> Tags
         {
@@ -62,23 +50,31 @@ namespace Microsoft.Azure.KeyVault
             set { this._tags = value; }
         }
         
-        private string _value;
-        
         /// <summary>
-        /// Optional.
+        /// Initializes a new instance of the CreateOrUpdateBase class.
         /// </summary>
-        public string Value
+        public CreateOrUpdateBase()
         {
-            get { return this._value; }
-            set { this._value = value; }
+            this.Tags = new LazyDictionary<string, string>();
         }
         
         /// <summary>
-        /// Initializes a new instance of the SecretRequestMessage class.
+        /// Initializes a new instance of the CreateOrUpdateBase class with
+        /// required arguments.
         /// </summary>
-        public SecretRequestMessage()
+        public CreateOrUpdateBase(string location, IDictionary<string, string> tags)
+            : this()
         {
-            this.Tags = new LazyDictionary<string, string>();
+            if (location == null)
+            {
+                throw new ArgumentNullException("location");
+            }
+            if (tags == null)
+            {
+                throw new ArgumentNullException("tags");
+            }
+            this.Location = location;
+            this.Tags = tags;
         }
     }
 }

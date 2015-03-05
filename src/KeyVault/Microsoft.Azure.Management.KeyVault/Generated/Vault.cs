@@ -21,31 +21,42 @@
 
 using System;
 using System.Linq;
+using Microsoft.Azure.Management.KeyVault;
 
-namespace Microsoft.Azure.KeyVault.Internal
+namespace Microsoft.Azure.Management.KeyVault
 {
-    /// <summary>
-    /// Represents a key operation request.
-    /// </summary>
-    public partial class KeyOpRequestMessageWithRawJsonContent
+    public partial class Vault : ResourceBase
     {
-        private string _rawJsonRequest;
+        private VaultProperties _properties;
         
         /// <summary>
         /// Optional.
         /// </summary>
-        public string RawJsonRequest
+        public VaultProperties Properties
         {
-            get { return this._rawJsonRequest; }
-            set { this._rawJsonRequest = value; }
+            get { return this._properties; }
+            set { this._properties = value; }
         }
         
         /// <summary>
-        /// Initializes a new instance of the
-        /// KeyOpRequestMessageWithRawJsonContent class.
+        /// Initializes a new instance of the Vault class.
         /// </summary>
-        public KeyOpRequestMessageWithRawJsonContent()
+        public Vault()
         {
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the Vault class with required
+        /// arguments.
+        /// </summary>
+        public Vault(string location)
+            : this()
+        {
+            if (location == null)
+            {
+                throw new ArgumentNullException("location");
+            }
+            this.Location = location;
         }
     }
 }

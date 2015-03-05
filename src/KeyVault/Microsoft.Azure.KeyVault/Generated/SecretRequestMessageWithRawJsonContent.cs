@@ -25,9 +25,9 @@ using System.Linq;
 namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
-    /// Represents a key operation request.
+    /// Represents a secret operation request.
     /// </summary>
-    public partial class KeyOpRequestMessageWithRawJsonContent
+    public partial class SecretRequestMessageWithRawJsonContent
     {
         private string _rawJsonRequest;
         
@@ -42,9 +42,9 @@ namespace Microsoft.Azure.KeyVault.Internal
         
         /// <summary>
         /// Initializes a new instance of the
-        /// KeyOpRequestMessageWithRawJsonContent class.
+        /// SecretRequestMessageWithRawJsonContent class.
         /// </summary>
-        public KeyOpRequestMessageWithRawJsonContent()
+        public SecretRequestMessageWithRawJsonContent()
         {
         }
     }

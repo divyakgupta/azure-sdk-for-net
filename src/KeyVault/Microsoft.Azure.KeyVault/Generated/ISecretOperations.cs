@@ -23,9 +23,9 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.KeyVault.Internal;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
     /// Secrets REST APIs
@@ -39,10 +39,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        Task<SecretResponseMessage> DeleteAsync(string secretIdentifier, CancellationToken cancellationToken);
+        Task<SecretResponseMessageWithRawJsonContent> DeleteAsync(string secretIdentifier, CancellationToken cancellationToken);
         
         /// <summary>
         /// Get secret
@@ -51,10 +50,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        Task<SecretResponseMessage> GetAsync(string secretIdentifier, CancellationToken cancellationToken);
+        Task<SecretResponseMessageWithRawJsonContent> GetAsync(string secretIdentifier, CancellationToken cancellationToken);
         
         /// <summary>
         /// Get
@@ -63,10 +61,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        Task<ListSecretsResponseMessage> ListAsync(string vault, int? top, CancellationToken cancellationToken);
+        Task<SecretResponseMessageWithRawJsonContent> ListAsync(string vault, int? top, CancellationToken cancellationToken);
         
         /// <summary>
         /// Get
@@ -75,10 +72,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        Task<ListSecretsResponseMessage> ListNextAsync(string nextLink, CancellationToken cancellationToken);
+        Task<SecretResponseMessageWithRawJsonContent> ListNextAsync(string nextLink, CancellationToken cancellationToken);
         
         /// <summary>
         /// Get
@@ -87,10 +83,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        Task<ListSecretsResponseMessage> ListVersionsAsync(string vault, string secretName, int? top, CancellationToken cancellationToken);
+        Task<SecretResponseMessageWithRawJsonContent> ListVersionsAsync(string vault, string secretName, int? top, CancellationToken cancellationToken);
         
         /// <summary>
         /// Get
@@ -99,10 +94,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        Task<ListSecretsResponseMessage> ListVersionsNextAsync(string nextLink, CancellationToken cancellationToken);
+        Task<SecretResponseMessageWithRawJsonContent> ListVersionsNextAsync(string nextLink, CancellationToken cancellationToken);
         
         /// <summary>
         /// Set secret
@@ -111,10 +105,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        Task<SecretResponseMessage> SetAsync(string secretIdentifier, SecretRequestMessage request, CancellationToken cancellationToken);
+        Task<SecretResponseMessageWithRawJsonContent> SetAsync(string secretIdentifier, SecretRequestMessageWithRawJsonContent request, CancellationToken cancellationToken);
         
         /// <summary>
         /// Update secret
@@ -123,9 +116,8 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        Task<SecretResponseMessage> UpdateAsync(string secretIdentifier, UpdateSecretRequestMessage request, CancellationToken cancellationToken);
+        Task<SecretResponseMessageWithRawJsonContent> UpdateAsync(string secretIdentifier, SecretRequestMessageWithRawJsonContent request, CancellationToken cancellationToken);
     }
 }

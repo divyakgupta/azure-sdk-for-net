@@ -5,7 +5,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <AppDesignerFolder>Properties</AppDesignerFolder>    
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <ProjectGuid>{493472CB-F9C0-4312-A8F1-399641926F5E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -24,8 +24,8 @@
     <Compile Include="Json\CamelCaseStringEnumConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Microsoft.KeyVault.WebKey.nuspec" />
-    <None Include="Microsoft.KeyVault.WebKey.nuget.proj" />
+    <None Include="Microsoft.Azure.KeyVault.WebKey.nuget.proj" />
+    <None Include="Microsoft.Azure.KeyVault.WebKey.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

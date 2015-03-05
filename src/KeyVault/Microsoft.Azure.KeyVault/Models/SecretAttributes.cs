@@ -15,16 +15,15 @@
 // See the Apache License, Version 2.0 for the specific language
 // governing permissions and limitations under the License.
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.KeyVault
 {
     /// <summary>
-    /// The attributes of a key managed by the KeyVault service
+    /// The attributes of a secret managed by the KeyVault service
     /// </summary>
     [JsonObject]
-    public class KeyAttributes
+    public class SecretAttributes
     {
         public const string PropertyEnabled = "enabled";
         public const string PropertyNotBefore = "nbf";
@@ -52,12 +51,6 @@ namespace Microsoft.Azure.KeyVault
         public long? Updated { get; set; }
 
         /// <summary>
-        /// Additional data 
-        /// </summary>
-        [JsonExtensionData]
-        public Dictionary<string, object> AdditionalInfo  { get; set; }
-
-        /// <summary>
         /// Default constructor
         /// </summary>
         /// <remarks>
@@ -68,18 +61,18 @@ namespace Microsoft.Azure.KeyVault
         /// Created   = null
         /// Updated   = null
         /// </remarks>
-        public KeyAttributes()
+        public SecretAttributes()
         {
-            Enabled   = null;
+            Enabled = null;
             NotBefore = null;
-            Expires   = null;
+            Expires = null;
             Created = null;
             Updated = null;
         }
 
         public override string ToString()
         {
-            return JsonConvert.SerializeObject( this );
+            return JsonConvert.SerializeObject(this);
         }
     }
 }

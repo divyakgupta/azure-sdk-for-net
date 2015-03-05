@@ -15,27 +15,30 @@
 // See the Apache License, Version 2.0 for the specific language
 // governing permissions and limitations under the License.
 
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
 
-namespace Microsoft.KeyVault.WebKey
+namespace Microsoft.Azure.KeyVault.WebKey
 {
+
     /// <summary>
-    /// Supported JsonWebKey Algorithms
+    /// Supported JsonWebKey operations
     /// </summary>
-    public static class JsonWebKeyEncryptionAlgorithm
+    public static class JsonWebKeyOperation
     {
-        public const string RSAOAEP = "RSA_OAEP";
-        public const string RSA15   = "RSA1_5";
+        public const string Encrypt = "encrypt";
+        public const string Decrypt = "decrypt";
+        public const string Sign    = "sign";
+        public const string Verify  = "verify";
+        public const string Wrap    = "wrapKey";
+        public const string Unwrap  = "unwrapKey";
 
         /// <summary>
-        /// All algorithms names. Use clone to avoid FxCop violation
+        /// All operations names. Use clone to avoid FxCop violation
         /// </summary>
-        public static string[] AllAlgorithms
+        public static string[] AllOperations
         {
-            get { return (string[])_allAlgorithms.Clone(); }
+            get { return (string[])_allOperations.Clone(); }
         }
 
-        private static readonly string[] _allAlgorithms = { RSA15, RSAOAEP };
+        private static readonly string[] _allOperations = new string[] { Encrypt, Decrypt, Sign, Verify, Wrap, Unwrap };
     }
- }
+}

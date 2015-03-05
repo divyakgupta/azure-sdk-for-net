@@ -19,10 +19,10 @@ using System;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
-using Microsoft.KeyVault.WebKey.Json;
+using Microsoft.Azure.KeyVault.WebKey.Json;
 using Newtonsoft.Json;
 
-namespace Microsoft.KeyVault.WebKey
+namespace Microsoft.Azure.KeyVault.WebKey
 {
     // As of http://tools.ietf.org/html/draft-ietf-jose-json-web-key-18
     [JsonObject]

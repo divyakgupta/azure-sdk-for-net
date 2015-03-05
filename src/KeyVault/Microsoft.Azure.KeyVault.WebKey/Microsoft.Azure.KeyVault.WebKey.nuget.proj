@@ -4,8 +4,8 @@
     <!--
     Microsoft.KeyVault.WebKey
     -->
-    <SdkNuGetPackage Include="Microsoft.KeyVault.WebKey">
-      <PackageVersion>0.0.1-prerelease</PackageVersion>
+    <SdkNuGetPackage Include="Microsoft.Azure.KeyVault.WebKey">
+      <PackageVersion>0.0.1-preview</PackageVersion>
       <Folder>$(MSBuildThisFileDirectory)</Folder>
     </SdkNuGetPackage>
   </ItemGroup>

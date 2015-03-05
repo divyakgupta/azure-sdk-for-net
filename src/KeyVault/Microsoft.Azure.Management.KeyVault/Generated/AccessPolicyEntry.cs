@@ -20,65 +20,50 @@
 // code is regenerated.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Hyak.Common;
-using Microsoft.Azure.KeyVault;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.Management.KeyVault
 {
-    public partial class UpdateSecretRequestMessage
+    public partial class AccessPolicyEntry
     {
-        private SecretAttributes _attributes;
+        private Guid _objectId;
         
         /// <summary>
         /// Optional.
         /// </summary>
-        public SecretAttributes Attributes
+        public Guid ObjectId
         {
-            get { return this._attributes; }
-            set { this._attributes = value; }
+            get { return this._objectId; }
+            set { this._objectId = value; }
         }
         
-        private string _contentType;
+        private string _permissions;
         
         /// <summary>
         /// Optional.
         /// </summary>
-        public string ContentType
+        public string Permissions
         {
-            get { return this._contentType; }
-            set { this._contentType = value; }
+            get { return this._permissions; }
+            set { this._permissions = value; }
         }
         
-        private string _id;
+        private Guid _tenantId;
         
         /// <summary>
         /// Optional.
         /// </summary>
-        public string Id
+        public Guid TenantId
         {
-            get { return this._id; }
-            set { this._id = value; }
-        }
-        
-        private IDictionary<string, string> _tags;
-        
-        /// <summary>
-        /// Optional.
-        /// </summary>
-        public IDictionary<string, string> Tags
-        {
-            get { return this._tags; }
-            set { this._tags = value; }
+            get { return this._tenantId; }
+            set { this._tenantId = value; }
         }
         
         /// <summary>
-        /// Initializes a new instance of the UpdateSecretRequestMessage class.
+        /// Initializes a new instance of the AccessPolicyEntry class.
         /// </summary>
-        public UpdateSecretRequestMessage()
+        public AccessPolicyEntry()
         {
-            this.Tags = new LazyDictionary<string, string>();
         }
     }
 }

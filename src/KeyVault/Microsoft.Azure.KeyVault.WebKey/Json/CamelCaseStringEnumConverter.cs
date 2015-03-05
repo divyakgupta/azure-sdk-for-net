@@ -15,29 +15,15 @@
 // See the Apache License, Version 2.0 for the specific language
 // governing permissions and limitations under the License.
 
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-namespace Microsoft.KeyVault.WebKey
+namespace Microsoft.Azure.KeyVault.WebKey.Json
 {
-    /// <summary>
-    /// Supported JsonWebKey Algorithms
-    /// </summary>
-    public static class JsonWebKeySignatureAlgorithm
+    public class CamelCaseStringEnumConverter : StringEnumConverter
     {
-        public const string RS256   = "RS256";
-        public const string RS384   = "RS384";
-        public const string RS512   = "RS512";
-        public const string RSNULL  = "RSNULL";
-
-        /// <summary>
-        /// All algorithms names. Use clone to avoid FxCop violation
-        /// </summary>
-        public static string[] AllAlgorithms
+        public CamelCaseStringEnumConverter() : base()
         {
-            get { return (string[])_allAlgorithms.Clone(); }
+            CamelCaseText = true;
         }
-
-        private static readonly string[] _allAlgorithms = { RS256, RS384, RS512, RSNULL };
     }
- }
+}

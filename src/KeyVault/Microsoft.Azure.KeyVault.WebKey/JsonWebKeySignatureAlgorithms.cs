@@ -15,27 +15,26 @@
 // See the Apache License, Version 2.0 for the specific language
 // governing permissions and limitations under the License.
 
-
-namespace Microsoft.KeyVault.WebKey
+namespace Microsoft.Azure.KeyVault.WebKey
 {
     /// <summary>
-    /// Supported JsonWebKey key types (kty)
+    /// Supported JsonWebKey Algorithms
     /// </summary>
-    public static class JsonWebKeyType
+    public static class JsonWebKeySignatureAlgorithm
     {
-        public const string EllipticCurve = "EC";
-        public const string Rsa           = "RSA";
-        public const string RsaHsm        = "RSA-HSM";
-        public const string Octet         = "oct";
+        public const string RS256   = "RS256";
+        public const string RS384   = "RS384";
+        public const string RS512   = "RS512";
+        public const string RSNULL  = "RSNULL";
 
         /// <summary>
-        /// All types names. Use clone to avoid FxCop violation
+        /// All algorithms names. Use clone to avoid FxCop violation
         /// </summary>
-        public static string[] AllTypes
+        public static string[] AllAlgorithms
         {
-            get { return (string[])_allTypes.Clone(); }
+            get { return (string[])_allAlgorithms.Clone(); }
         }
 
-        private static readonly string[] _allTypes = { EllipticCurve, Rsa, RsaHsm, Octet };
+        private static readonly string[] _allAlgorithms = { RS256, RS384, RS512, RSNULL };
     }
-}
+ }

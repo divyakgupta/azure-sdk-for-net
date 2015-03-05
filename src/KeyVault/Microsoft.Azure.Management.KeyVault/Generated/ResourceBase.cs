@@ -23,38 +23,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hyak.Common;
-using Microsoft.Azure.KeyVault;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.Management.KeyVault
 {
-    public partial class ListSecretResponseMessage
+    public partial class ResourceBase
     {
-        private SecretAttributes _attributes;
-        
-        /// <summary>
-        /// Optional.
-        /// </summary>
-        public SecretAttributes Attributes
-        {
-            get { return this._attributes; }
-            set { this._attributes = value; }
-        }
-        
-        private string _contentType;
-        
-        /// <summary>
-        /// Optional.
-        /// </summary>
-        public string ContentType
-        {
-            get { return this._contentType; }
-            set { this._contentType = value; }
-        }
-        
         private string _id;
         
         /// <summary>
-        /// Optional.
+        /// Optional. Gets the ID of the resource.
         /// </summary>
         public string Id
         {
@@ -62,10 +39,32 @@ namespace Microsoft.Azure.KeyVault
             set { this._id = value; }
         }
         
+        private string _location;
+        
+        /// <summary>
+        /// Required. Gets or sets the location of the resource.
+        /// </summary>
+        public string Location
+        {
+            get { return this._location; }
+            set { this._location = value; }
+        }
+        
+        private string _name;
+        
+        /// <summary>
+        /// Optional. The name of the resource.
+        /// </summary>
+        public string Name
+        {
+            get { return this._name; }
+            set { this._name = value; }
+        }
+        
         private IDictionary<string, string> _tags;
         
         /// <summary>
-        /// Optional.
+        /// Optional. Gets or sets the tags attached to the resource.
         /// </summary>
         public IDictionary<string, string> Tags
         {
@@ -73,12 +72,37 @@ namespace Microsoft.Azure.KeyVault
             set { this._tags = value; }
         }
         
+        private string _type;
+        
         /// <summary>
-        /// Initializes a new instance of the ListSecretResponseMessage class.
+        /// Optional. The type of the resource
         /// </summary>
-        public ListSecretResponseMessage()
+        public string Type
+        {
+            get { return this._type; }
+            set { this._type = value; }
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the ResourceBase class.
+        /// </summary>
+        public ResourceBase()
         {
             this.Tags = new LazyDictionary<string, string>();
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the ResourceBase class with required
+        /// arguments.
+        /// </summary>
+        public ResourceBase(string location)
+            : this()
+        {
+            if (location == null)
+            {
+                throw new ArgumentNullException("location");
+            }
+            this.Location = location;
         }
     }
 }

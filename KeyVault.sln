@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Azure.KeyVault", "src\KeyVault\Microsoft.Azure.KeyVault\Microsoft.Azure.KeyVault.csproj", "{5C7D49E4-BCD7-4C10-BB27-4978AD954915}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyVault", "src\KeyVault\Microsoft.Azure.KeyVault\KeyVault.csproj", "{5C7D49E4-BCD7-4C10-BB27-4978AD954915}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.KeyVault.WebKey", "src\KeyVault\Microsoft.KeyVault.WebKey\Microsoft.KeyVault.WebKey.csproj", "{493472CB-F9C0-4312-A8F1-399641926F5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyVaultManagement", "src\KeyVault\Microsoft.Azure.Management.KeyVault\KeyVaultManagement.csproj", "{92ADE435-B835-447D-8B5B-1F4A52F8DF39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyVault.WebKey", "src\KeyVault\Microsoft.Azure.KeyVault.WebKey\KeyVault.WebKey.csproj", "{493472CB-F9C0-4312-A8F1-399641926F5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,12 +15,16 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C7D49E4-BCD7-4C10-BB27-4978AD954915}.Debug|Any CPU.ActiveCfg = Net40-Release|Any CPU
-		{5C7D49E4-BCD7-4C10-BB27-4978AD954915}.Debug|Any CPU.Build.0 = Net40-Release|Any CPU
+		{5C7D49E4-BCD7-4C10-BB27-4978AD954915}.Debug|Any CPU.ActiveCfg = Net45-Release|Any CPU
+		{5C7D49E4-BCD7-4C10-BB27-4978AD954915}.Debug|Any CPU.Build.0 = Net45-Release|Any CPU
 		{5C7D49E4-BCD7-4C10-BB27-4978AD954915}.Release|Any CPU.ActiveCfg = Portable-Release|Any CPU
 		{5C7D49E4-BCD7-4C10-BB27-4978AD954915}.Release|Any CPU.Build.0 = Portable-Release|Any CPU
-		{493472CB-F9C0-4312-A8F1-399641926F5E}.Debug|Any CPU.ActiveCfg = Net40-Release|Any CPU
-		{493472CB-F9C0-4312-A8F1-399641926F5E}.Debug|Any CPU.Build.0 = Net40-Release|Any CPU
+		{92ADE435-B835-447D-8B5B-1F4A52F8DF39}.Debug|Any CPU.ActiveCfg = Net45-Release|Any CPU
+		{92ADE435-B835-447D-8B5B-1F4A52F8DF39}.Debug|Any CPU.Build.0 = Net45-Release|Any CPU
+		{92ADE435-B835-447D-8B5B-1F4A52F8DF39}.Release|Any CPU.ActiveCfg = Portable-Release|Any CPU
+		{92ADE435-B835-447D-8B5B-1F4A52F8DF39}.Release|Any CPU.Build.0 = Portable-Release|Any CPU
+		{493472CB-F9C0-4312-A8F1-399641926F5E}.Debug|Any CPU.ActiveCfg = Net45-Release|Any CPU
+		{493472CB-F9C0-4312-A8F1-399641926F5E}.Debug|Any CPU.Build.0 = Net45-Release|Any CPU
 		{493472CB-F9C0-4312-A8F1-399641926F5E}.Release|Any CPU.ActiveCfg = Portable-Release|Any CPU
 		{493472CB-F9C0-4312-A8F1-399641926F5E}.Release|Any CPU.Build.0 = Portable-Release|Any CPU
 	EndGlobalSection

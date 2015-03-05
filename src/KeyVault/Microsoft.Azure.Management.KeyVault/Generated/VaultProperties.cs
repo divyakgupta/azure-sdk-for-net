@@ -23,78 +23,73 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hyak.Common;
-using Microsoft.Azure;
-using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Management.KeyVault;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.Management.KeyVault
 {
-    /// <summary>
-    /// A standard service response including an HTTP status code and request
-    /// ID.
-    /// </summary>
-    public partial class SecretResponseMessage : AzureOperationResponse
+    public partial class VaultProperties
     {
-        private SecretAttributes _attributes;
+        private IList<AccessPolicyEntry> _accessPolicies;
         
         /// <summary>
         /// Optional.
         /// </summary>
-        public SecretAttributes Attributes
+        public IList<AccessPolicyEntry> AccessPolicies
         {
-            get { return this._attributes; }
-            set { this._attributes = value; }
+            get { return this._accessPolicies; }
+            set { this._accessPolicies = value; }
         }
         
-        private string _contentType;
+        private bool _enabledForDeployment;
         
         /// <summary>
         /// Optional.
         /// </summary>
-        public string ContentType
+        public bool EnabledForDeployment
         {
-            get { return this._contentType; }
-            set { this._contentType = value; }
+            get { return this._enabledForDeployment; }
+            set { this._enabledForDeployment = value; }
         }
         
-        private string _id;
+        private Sku _sku;
         
         /// <summary>
         /// Optional.
         /// </summary>
-        public string Id
+        public Sku Sku
         {
-            get { return this._id; }
-            set { this._id = value; }
+            get { return this._sku; }
+            set { this._sku = value; }
         }
         
-        private IDictionary<string, string> _tags;
+        private Guid _tenantId;
         
         /// <summary>
         /// Optional.
         /// </summary>
-        public IDictionary<string, string> Tags
+        public Guid TenantId
         {
-            get { return this._tags; }
-            set { this._tags = value; }
+            get { return this._tenantId; }
+            set { this._tenantId = value; }
         }
         
-        private string _value;
+        private string _vaultUri;
         
         /// <summary>
         /// Optional.
         /// </summary>
-        public string Value
+        public string VaultUri
         {
-            get { return this._value; }
-            set { this._value = value; }
+            get { return this._vaultUri; }
+            set { this._vaultUri = value; }
         }
         
         /// <summary>
-        /// Initializes a new instance of the SecretResponseMessage class.
+        /// Initializes a new instance of the VaultProperties class.
         /// </summary>
-        public SecretResponseMessage()
+        public VaultProperties()
         {
-            this.Tags = new LazyDictionary<string, string>();
+            this.AccessPolicies = new LazyList<AccessPolicyEntry>();
         }
     }
 }

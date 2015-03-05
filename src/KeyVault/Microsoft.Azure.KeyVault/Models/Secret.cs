@@ -15,11 +15,9 @@
 // See the Apache License, Version 2.0 for the specific language
 // governing permissions and limitations under the License.
 
-using System.Runtime.Serialization;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using System.Security;
-using System;
 
 namespace Microsoft.Azure.KeyVault
 {
@@ -72,15 +70,7 @@ namespace Microsoft.Azure.KeyVault
         {
             Attributes = new SecretAttributes();
         }
-
-        public Secret(SecretResponseMessage response)
-        {
-            Id = response.Id;
-            Value = response.Value;
-            Tags = new Dictionary<string,string>(response.Tags);
-            Attributes = response.Attributes;
-            ContentType = response.ContentType;
-        }
+        
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);

@@ -17,7 +17,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Microsoft.KeyVault.WebKey;
+using Microsoft.Azure.KeyVault.WebKey;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.KeyVault

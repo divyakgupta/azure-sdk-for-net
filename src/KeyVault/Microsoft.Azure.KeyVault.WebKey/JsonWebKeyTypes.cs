@@ -15,20 +15,27 @@
 // See the Apache License, Version 2.0 for the specific language
 // governing permissions and limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Converters;
 
-namespace Microsoft.KeyVault.WebKey.Json
+namespace Microsoft.Azure.KeyVault.WebKey
 {
-    public class CamelCaseStringEnumConverter : StringEnumConverter
+    /// <summary>
+    /// Supported JsonWebKey key types (kty)
+    /// </summary>
+    public static class JsonWebKeyType
     {
-        public CamelCaseStringEnumConverter() : base()
+        public const string EllipticCurve = "EC";
+        public const string Rsa           = "RSA";
+        public const string RsaHsm        = "RSA-HSM";
+        public const string Octet         = "oct";
+
+        /// <summary>
+        /// All types names. Use clone to avoid FxCop violation
+        /// </summary>
+        public static string[] AllTypes
         {
-            CamelCaseText = true;
+            get { return (string[])_allTypes.Clone(); }
         }
+
+        private static readonly string[] _allTypes = { EllipticCurve, Rsa, RsaHsm, Octet };
     }
 }

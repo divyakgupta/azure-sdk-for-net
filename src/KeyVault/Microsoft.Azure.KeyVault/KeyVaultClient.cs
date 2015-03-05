@@ -1,14 +1,31 @@
-﻿using System;
+﻿//
+// Copyright © Microsoft Corporation, All Rights Reserved
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS
+// OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+// ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A
+// PARTICULAR PURPOSE, MERCHANTABILITY OR NON-INFRINGEMENT.
+//
+// See the Apache License, Version 2.0 for the specific language
+// governing permissions and limitations under the License.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using Newtonsoft.Json;
-using System.IO;
-using Microsoft.KeyVault.WebKey;
-using System.Security;
 using System.Net.Http;
+using System.Security;
+using System.Threading;
+using System.Threading.Tasks;
+using Hyak.Common;
+using Microsoft.Azure.KeyVault.Internal;
+using Microsoft.Azure.KeyVault.WebKey;
+using Newtonsoft.Json;
 
 namespace Microsoft.Azure.KeyVault
 {
@@ -53,19 +70,28 @@ namespace Microsoft.Azure.KeyVault
         #region Key Crypto Operations
         public async Task<KeyOperationResult> EncryptDataAsync(string keyIdentifier, string algorithm, byte[] plainText)
         {
-            var response = await InternalClient.Keys.EncryptDataAsync(
-                keyIdentifier,
-                CreateKeyOpRequest(algorithm, plainText),
-                CancellationToken.None);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.EncryptDataAsync(
+                    keyIdentifier,
+                    CreateKeyOpRequest(algorithm, plainText),
+                    CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
+                return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
+            });            
         }
 
         public async Task<KeyOperationResult> DecryptDataAsync(string keyIdentifier, string algorithm, byte[] cipherText)
         {
-            var response = await InternalClient.Keys.DecryptDataAsync(keyIdentifier, CreateKeyOpRequest(algorithm, cipherText), CancellationToken.None);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.DecryptDataAsync(
+                        keyIdentifier, 
+                        CreateKeyOpRequest(algorithm, cipherText),
+                        CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
+                return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
+            });
         }
                 
         public async Task<KeyOperationResult> SignAsync(string vault, string keyName, string keyVersion, string algorithm, byte[] digest)
@@ -80,22 +106,28 @@ namespace Microsoft.Azure.KeyVault
 
         public async Task<KeyOperationResult> SignAsync(string keyIdentifier, string algorithm, byte[] digest)
         {
-            var response = await InternalClient.Keys.SignAsync(
-                keyIdentifier,
-                CreateKeyOpRequest(algorithm, digest),
-                CancellationToken.None);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.SignAsync(
+                    keyIdentifier,
+                    CreateKeyOpRequest(algorithm, digest),
+                    CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
+                return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
+            });
         }
 
         public async Task<bool> VerifyAsync(string keyIdentifier, string algorithm, byte[] digest, byte[] signature)
         {
-            var response = await InternalClient.Keys.VerifyAsync(
-                keyIdentifier,
-                CreateVerifyRequest(algorithm, digest, signature),
-                CancellationToken.None);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.VerifyAsync(
+                    keyIdentifier,
+                    CreateVerifyRequest(algorithm, digest, signature),
+                    CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<VerifyResponseMessage>(response.KeyOpResponse).Value;
+                return JsonConvert.DeserializeObject<VerifyResponseMessage>(response.KeyOpResponse).Value;
+            });
         }
 
         public async Task<KeyOperationResult> WrapKeyAsync(string vault, string keyName, string keyVersion, string algorithm, byte[] key)
@@ -110,19 +142,28 @@ namespace Microsoft.Azure.KeyVault
 
         public async Task<KeyOperationResult> WrapKeyAsync(string keyIdentifier, string algorithm, byte[] key)
         {
-            var response = await InternalClient.Keys.WrapKeyAsync(
-                keyIdentifier,
-                CreateKeyOpRequest(algorithm, key),
-                CancellationToken.None);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.WrapKeyAsync(
+                    keyIdentifier,
+                    CreateKeyOpRequest(algorithm, key),
+                    CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
+                return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
+            });
         }
 
         public async Task<KeyOperationResult> UnwrapKeyAsync(string keyIdentifier, string algorithm, byte[] wrappedKey)
         {
-            var response = await InternalClient.Keys.UnwrapKeyAsync(keyIdentifier, CreateKeyOpRequest(algorithm, wrappedKey), CancellationToken.None);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.UnwrapKeyAsync(
+                    keyIdentifier, 
+                    CreateKeyOpRequest(algorithm, wrappedKey),
+                    CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
+                return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
+            });
         }
 
         #endregion
@@ -130,11 +171,18 @@ namespace Microsoft.Azure.KeyVault
         #region Key Management
         public async Task<KeyBundle> CreateKeyAsync( string vault, string keyName, string keyType, int? keySize = null, string[] key_ops = null, KeyAttributes keyAttributes = null, Dictionary<string, string> tags = null )
         {
-            var keyIdentifier = new KeyIdentifier(vault, keyName);
+            return await Do(async () =>
+            {
+                var keyIdentifier = new KeyIdentifier(vault, keyName);
 
-            var response = await InternalClient.Keys.CreateAsync(vault, keyName, CreateKeyRequest(keyType, keySize, key_ops, keyAttributes, tags), CancellationToken.None);
+                var response = await InternalClient.Keys.CreateAsync(
+                    vault, 
+                    keyName,
+                    CreateKeyRequest(keyType, keySize, key_ops, keyAttributes, tags), 
+                    CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+                return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+            });
         }
 
         public async Task<KeyBundle> GetKeyAsync(string vault, string keyName, string keyVersion)
@@ -146,40 +194,62 @@ namespace Microsoft.Azure.KeyVault
 
         public async Task<KeyBundle> GetKeyAsync(string keyIdentifier)
         {
-            var response = await InternalClient.Keys.GetAsync(keyIdentifier, CancellationToken.None);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.GetAsync(keyIdentifier, CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+                return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+            });
         }
 
         public async Task<ListKeysResponseMessage> GetKeysAsync(string vault, int? maxresults = null)
         {
-            var response = await InternalClient.Keys.ListAsync(vault, maxresults);
-            return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.ListAsync(vault, maxresults);
+
+                return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
+            });
         }
 
         public async Task<ListKeysResponseMessage> GetKeysNextAsync(string nextLink)
         {
-            var response = await InternalClient.Keys.ListNextAsync(nextLink);
-            return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.ListNextAsync(nextLink);
+
+                return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
+            });
         }
 
         public async Task<ListKeysResponseMessage> GetKeyVersionsAsync(string vault, string keyName, int? maxresults = null)
         {
-            var response = await InternalClient.Keys.ListVersionsAsync(vault, keyName, maxresults);
-            return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.ListVersionsAsync(vault, keyName, maxresults);
+
+                return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
+            });
         }
 
         public async Task<ListKeysResponseMessage> GetKeyVersionsNextAsync(string nextLink)
         {
-            var response = await InternalClient.Keys.ListVersionsNextAsync(nextLink);
-            return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.ListVersionsNextAsync(nextLink);
+
+                return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
+            });
         }
 
         public async Task<KeyBundle> DeleteKeyAsync(string vault, string keyName)
         {
-            var response = await InternalClient.Keys.DeleteKeyAsync(vault, keyName, CancellationToken.None);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.DeleteKeyAsync(vault, keyName, CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+                return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+            });
         }
 
         public async Task<KeyBundle> UpdateKeyAsync(string vault, string keyName, string[] keyOps = null, KeyAttributes attributes = null, Dictionary<string, string> tags = null)
@@ -191,35 +261,56 @@ namespace Microsoft.Azure.KeyVault
 
         public async Task<KeyBundle> UpdateKeyAsync(string keyIdentifier, string[] keyOps = null, KeyAttributes attributes = null, Dictionary<string, string> tags = null)
         {
-            var response = await InternalClient.Keys.UpdateAsync(keyIdentifier, CreateUpdateKeyRequest(keyOps, attributes, tags), CancellationToken.None);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.UpdateAsync(
+                    keyIdentifier, 
+                    CreateUpdateKeyRequest(keyOps, attributes, tags),
+                    CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+                return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+            });
         }
 
         public async Task<KeyBundle> ImportKeyAsync( string vault, string keyName, KeyBundle keyBundle, bool? importToHardware = null )
         {
-            var keyIdentifier = new KeyIdentifier(vault, keyName);
+            return await Do(async () =>
+            {
+                var keyIdentifier = new KeyIdentifier(vault, keyName);
 
-            var response = await InternalClient.Keys.ImportAsync(keyIdentifier.Identifier, CreateImportKeyRequest(importToHardware, keyBundle), CancellationToken.None);
+                var response = await InternalClient.Keys.ImportAsync(
+                    keyIdentifier.Identifier,
+                    CreateImportKeyRequest(importToHardware, keyBundle), 
+                    CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+                return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+            });
 
         }
         
         public async Task<byte[]> BackupKeyAsync( string vault, string keyName )
         {
-            var keyIdentifier = new KeyIdentifier(vault, keyName);
+            return await Do(async () =>
+            {
+                var keyIdentifier = new KeyIdentifier(vault, keyName);
 
-            var response = await InternalClient.Keys.BackupAsync(keyIdentifier.Identifier, CancellationToken.None);
+                var response = await InternalClient.Keys.BackupAsync(keyIdentifier.Identifier, CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<BackupKeyResponseMessage>(response.KeyOpResponse).Value;
+                return JsonConvert.DeserializeObject<BackupKeyResponseMessage>(response.KeyOpResponse).Value;
+            });
         }
 
         public async Task<KeyBundle> RestoreKeyAsync(string vault, byte[] keyBundleBackup)
         {
-            var response = await InternalClient.Keys.RestoreAsync(vault, CreateRestoreKeyRequest(keyBundleBackup), CancellationToken.None);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Keys.RestoreAsync(
+                    vault, 
+                    CreateRestoreKeyRequest(keyBundleBackup),
+                    CancellationToken.None);
 
-            return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+                return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
+            });
         }
 
         #endregion
@@ -234,29 +325,32 @@ namespace Microsoft.Azure.KeyVault
 
         public async Task<Secret> GetSecretAsync( string secretIdentifier )
         {
-            var response = await InternalClient.Secrets.GetAsync(secretIdentifier, CancellationToken.None);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Secrets.GetAsync(secretIdentifier, CancellationToken.None);
 
-            return new Secret(response);
+                return JsonConvert.DeserializeObject<Secret>(response.Response);
+            });
         }
         
         public async Task<Secret> SetSecretAsync(string vault, string secretName, SecureString value, Dictionary<string, string> tags = null, string contentType = null, bool enabled = true, bool active = true, bool expired = false)
         {
             var secretIdentifier = new SecretIdentifier(vault, secretName);
+
             return await SetSecretAsync(secretIdentifier.BaseIdentifier, value, tags, contentType, enabled, active, expired);
         }
 
         private async Task<Secret> SetSecretAsync(string secretIdentifier, SecureString value, Dictionary<string, string> tags, string contentType, bool enabled, bool active, bool expired)
         {
-            var request = new SecretRequestMessage
+            return await Do(async () =>
             {
-                Value = value.ConvertToString(),
-                ContentType = contentType,
-                Tags = tags,
-                Attributes = NewSecretAttributes(enabled, active, expired)
-            };
+                var response = await InternalClient.Secrets.SetAsync(
+                    secretIdentifier,
+                    CreateSecretRequest(value, tags, contentType, enabled, active, expired),
+                    CancellationToken.None);
 
-            var response = await InternalClient.Secrets.SetAsync(secretIdentifier, request, CancellationToken.None);
-            return new Secret(response);
+                return JsonConvert.DeserializeObject<Secret>(response.Response);
+            });
         }
 
         public async Task<Secret> UpdateSecretAsync(string vault, string secretName, string contentType = null, Dictionary<string, string> tags = null, bool enabled = true, bool active = true, bool expired = false)
@@ -266,57 +360,121 @@ namespace Microsoft.Azure.KeyVault
         }
 
         public async Task<Secret> UpdateSecretAsync(string secretIdentifier, string contentType = null, Dictionary<string, string> tags = null, bool enabled = true, bool active = true, bool expired = false)
-        {            
-            var request = new UpdateSecretRequestMessage
+        {
+            return await Do(async () =>
             {
-                Attributes = NewSecretAttributes(enabled, active, expired),
-                ContentType = contentType,
-                Tags = tags
-            };
-
-            var response = await InternalClient.Secrets.UpdateAsync(secretIdentifier, request);
-            return new Secret(response);
+                var response = await InternalClient.Secrets.UpdateAsync(
+                    secretIdentifier,
+                    CreateUpdateSecretRequest(contentType, tags, enabled, active, expired)
+                    );
+                return JsonConvert.DeserializeObject<Secret>(response.Response);
+            });
         }
 
         public async Task<Secret> DeleteSecretAsync(string vault, string secretName)
         {
-            var secretIdentifier = new SecretIdentifier(vault, secretName);
+            return await Do(async () =>
+            {
+                var secretIdentifier = new SecretIdentifier(vault, secretName);
 
-            var response = await InternalClient.Secrets.DeleteAsync(secretIdentifier.BaseIdentifier, CancellationToken.None);
+                var response = await InternalClient.Secrets.DeleteAsync(secretIdentifier.BaseIdentifier, CancellationToken.None);
 
-            return new Secret(response);
+                return JsonConvert.DeserializeObject<Secret>(response.Response);
+            });
         }
 
         public async Task<Secret> DeleteSecretAsync(string secretIdentifier)
-        {            
-            var response = await InternalClient.Secrets.DeleteAsync(secretIdentifier, CancellationToken.None);
+        {
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Secrets.DeleteAsync(secretIdentifier, CancellationToken.None);
 
-            return new Secret(response);
+                return JsonConvert.DeserializeObject<Secret>(response.Response);
+            });
         }
 
         public async Task<ListSecretsResponseMessage> GetSecretsAsync(string vault, int? maxresults = null )
-        {            
-            return await InternalClient.Secrets.ListAsync(vault, maxresults);
+        {
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Secrets.ListAsync(vault, maxresults);
+
+                return JsonConvert.DeserializeObject<ListSecretsResponseMessage>(response.Response);
+            });
         }
 
         public async Task<ListSecretsResponseMessage> GetSecretsNextAsync(string nextLink)
         {
-            return await InternalClient.Secrets.ListNextAsync(nextLink);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Secrets.ListNextAsync(nextLink);
+
+                return JsonConvert.DeserializeObject<ListSecretsResponseMessage>(response.Response);
+            });
         }
 
         public async Task<ListSecretsResponseMessage> GetSecretVersionsAsync(string vault, string secretName, int? maxresults = null)
         {
-            return await InternalClient.Secrets.ListVersionsAsync(vault, secretName, maxresults);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Secrets.ListVersionsAsync(vault, secretName, maxresults);
+
+                return JsonConvert.DeserializeObject<ListSecretsResponseMessage>(response.Response);
+            });
         }
 
         public async Task<ListSecretsResponseMessage> GetSecretVersionsNextAsync(string nextLink)
         {
-            return await InternalClient.Secrets.ListVersionsNextAsync(nextLink);
+            return await Do(async () =>
+            {
+                var response = await InternalClient.Secrets.ListVersionsNextAsync(nextLink);
+
+                return JsonConvert.DeserializeObject<ListSecretsResponseMessage>(response.Response);
+            });
         }
 
         #endregion
 
         #region Helper Methods
+        public async Task<T> Do<T>(Func<Task<T>> func)
+        {
+            try
+            {
+                return await func();
+            }
+            catch (CloudException cloudException)
+            {                
+                ErrorResponseMessage error = null;
+                                    
+                var errorText = cloudException.Response.Content;
+
+                try
+                {
+                    error = JsonConvert.DeserializeObject<ErrorResponseMessage>(errorText);
+                }
+                catch (Exception)
+                {
+                    // Error deserialization failed, attempt to get some data for the client
+                    error = new ErrorResponseMessage()
+                    {
+                        Error = new Error()
+                        {
+                            Code = "Unknown",
+                            Message = string.Format(
+                                "HTTP {0} Error: {1}, Reason: {2} ", 
+                                cloudException.Response.StatusCode.ToString(), 
+                                errorText,
+                                cloudException.Response.ReasonPhrase),
+                        },
+                    };
+                }
+                
+                throw new KeyVaultClientException(
+                    cloudException.Response.StatusCode, 
+                    cloudException.Request.RequestUri, 
+                    error != null ? error.Error : null);
+            }
+        }
 
         private static SecretAttributes NewSecretAttributes(bool enabled, bool active, bool expired)
         {
@@ -340,9 +498,6 @@ namespace Microsoft.Azure.KeyVault
             return attributes;
         }
 
-        #endregion
-
-        #region Request Object Creation
         private static KeyOpRequestMessageWithRawJsonContent CreateKeyOpRequest(string algorithm, byte[] plainText)
         {
             if (string.IsNullOrEmpty(algorithm))
@@ -399,6 +554,32 @@ namespace Microsoft.Azure.KeyVault
             return new KeyOpRequestMessageWithRawJsonContent { RawJsonRequest = JsonConvert.SerializeObject(request) };
         }
 
+        private static SecretRequestMessageWithRawJsonContent CreateSecretRequest(SecureString value,
+            Dictionary<string, string> tags, string contentType, bool enabled, bool active, bool expired)
+        {
+            var request = new Secret
+            {
+                Value = value.ConvertToString(),
+                ContentType = contentType,
+                Tags = tags,
+                Attributes = NewSecretAttributes(enabled, active, expired)
+            };
+
+            return new SecretRequestMessageWithRawJsonContent() { RawJsonRequest = JsonConvert.SerializeObject(request) };
+        }
+
+        private static SecretRequestMessageWithRawJsonContent CreateUpdateSecretRequest(string contentType = null,
+            Dictionary<string, string> tags = null, bool enabled = true, bool active = true, bool expired = false)
+        {
+            var request = new Secret
+            {                
+                ContentType = contentType,
+                Tags = tags,
+                Attributes = NewSecretAttributes(enabled, active, expired)
+            };
+
+            return new SecretRequestMessageWithRawJsonContent() { RawJsonRequest = JsonConvert.SerializeObject(request) };
+        }
         #endregion
     }        
 }

@@ -23,9 +23,9 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.KeyVault.Internal;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
     /// Key REST APIs

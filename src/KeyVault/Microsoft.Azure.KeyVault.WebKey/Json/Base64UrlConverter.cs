@@ -19,7 +19,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.KeyVault.WebKey.Json
+namespace Microsoft.Azure.KeyVault.WebKey.Json
 {
     public class Base64UrlConverter : JsonConverter
     {

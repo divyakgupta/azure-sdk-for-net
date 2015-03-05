@@ -29,11 +29,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Hyak.Common;
-using Hyak.Common.Internals;
-using Microsoft.Azure.KeyVault;
-using Newtonsoft.Json.Linq;
+using Microsoft.Azure.KeyVault.Internal;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
     /// Secrets REST APIs
@@ -55,7 +53,7 @@ namespace Microsoft.Azure.KeyVault
         
         /// <summary>
         /// Gets a reference to the
-        /// Microsoft.Azure.KeyVault.KeyVaultInternalClient.
+        /// Microsoft.Azure.KeyVault.Internal.KeyVaultInternalClient.
         /// </summary>
         public KeyVaultInternalClient Client
         {
@@ -72,10 +70,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public async Task<SecretResponseMessage> DeleteAsync(string secretIdentifier, CancellationToken cancellationToken)
+        public async Task<SecretResponseMessageWithRawJsonContent> DeleteAsync(string secretIdentifier, CancellationToken cancellationToken)
         {
             // Validate
             if (secretIdentifier == null)
@@ -148,93 +145,12 @@ namespace Microsoft.Azure.KeyVault
                     }
                     
                     // Create Result
-                    SecretResponseMessage result = null;
+                    SecretResponseMessageWithRawJsonContent result = null;
                     // Deserialize Response
                     cancellationToken.ThrowIfCancellationRequested();
                     string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    result = new SecretResponseMessage();
-                    JToken responseDoc = null;
-                    if (string.IsNullOrEmpty(responseContent) == false)
-                    {
-                        responseDoc = JToken.Parse(responseContent);
-                    }
-                    
-                    if (responseDoc != null && responseDoc.Type != JTokenType.Null)
-                    {
-                        JToken idValue = responseDoc["id"];
-                        if (idValue != null && idValue.Type != JTokenType.Null)
-                        {
-                            string idInstance = ((string)idValue);
-                            result.Id = idInstance;
-                        }
-                        
-                        JToken valueValue = responseDoc["value"];
-                        if (valueValue != null && valueValue.Type != JTokenType.Null)
-                        {
-                            string valueInstance = ((string)valueValue);
-                            result.Value = valueInstance;
-                        }
-                        
-                        JToken contentTypeValue = responseDoc["contentType"];
-                        if (contentTypeValue != null && contentTypeValue.Type != JTokenType.Null)
-                        {
-                            string contentTypeInstance = ((string)contentTypeValue);
-                            result.ContentType = contentTypeInstance;
-                        }
-                        
-                        JToken attributesValue = responseDoc["attributes"];
-                        if (attributesValue != null && attributesValue.Type != JTokenType.Null)
-                        {
-                            SecretAttributes attributesInstance = new SecretAttributes();
-                            result.Attributes = attributesInstance;
-                            
-                            JToken enabledValue = attributesValue["enabled"];
-                            if (enabledValue != null && enabledValue.Type != JTokenType.Null)
-                            {
-                                bool enabledInstance = ((bool)enabledValue);
-                                attributesInstance.Enabled = enabledInstance;
-                            }
-                            
-                            JToken nbfValue = attributesValue["nbf"];
-                            if (nbfValue != null && nbfValue.Type != JTokenType.Null)
-                            {
-                                long nbfInstance = ((long)nbfValue);
-                                attributesInstance.NotBefore = nbfInstance;
-                            }
-                            
-                            JToken expValue = attributesValue["exp"];
-                            if (expValue != null && expValue.Type != JTokenType.Null)
-                            {
-                                long expInstance = ((long)expValue);
-                                attributesInstance.Expires = expInstance;
-                            }
-                            
-                            JToken createdValue = attributesValue["created"];
-                            if (createdValue != null && createdValue.Type != JTokenType.Null)
-                            {
-                                long createdInstance = ((long)createdValue);
-                                attributesInstance.Created = createdInstance;
-                            }
-                            
-                            JToken updatedValue = attributesValue["updated"];
-                            if (updatedValue != null && updatedValue.Type != JTokenType.Null)
-                            {
-                                long updatedInstance = ((long)updatedValue);
-                                attributesInstance.Updated = updatedInstance;
-                            }
-                        }
-                        
-                        JToken tagsSequenceElement = ((JToken)responseDoc["tags"]);
-                        if (tagsSequenceElement != null && tagsSequenceElement.Type != JTokenType.Null)
-                        {
-                            foreach (JProperty property in tagsSequenceElement)
-                            {
-                                string tagsKey = ((string)property.Name);
-                                string tagsValue = ((string)property.Value);
-                                result.Tags.Add(tagsKey, tagsValue);
-                            }
-                        }
-                    }
+                    result = new SecretResponseMessageWithRawJsonContent();
+                    result.Response = responseContent;
                     
                     result.StatusCode = statusCode;
                     
@@ -271,10 +187,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public async Task<SecretResponseMessage> GetAsync(string secretIdentifier, CancellationToken cancellationToken)
+        public async Task<SecretResponseMessageWithRawJsonContent> GetAsync(string secretIdentifier, CancellationToken cancellationToken)
         {
             // Validate
             if (secretIdentifier == null)
@@ -347,93 +262,12 @@ namespace Microsoft.Azure.KeyVault
                     }
                     
                     // Create Result
-                    SecretResponseMessage result = null;
+                    SecretResponseMessageWithRawJsonContent result = null;
                     // Deserialize Response
                     cancellationToken.ThrowIfCancellationRequested();
                     string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    result = new SecretResponseMessage();
-                    JToken responseDoc = null;
-                    if (string.IsNullOrEmpty(responseContent) == false)
-                    {
-                        responseDoc = JToken.Parse(responseContent);
-                    }
-                    
-                    if (responseDoc != null && responseDoc.Type != JTokenType.Null)
-                    {
-                        JToken idValue = responseDoc["id"];
-                        if (idValue != null && idValue.Type != JTokenType.Null)
-                        {
-                            string idInstance = ((string)idValue);
-                            result.Id = idInstance;
-                        }
-                        
-                        JToken valueValue = responseDoc["value"];
-                        if (valueValue != null && valueValue.Type != JTokenType.Null)
-                        {
-                            string valueInstance = ((string)valueValue);
-                            result.Value = valueInstance;
-                        }
-                        
-                        JToken contentTypeValue = responseDoc["contentType"];
-                        if (contentTypeValue != null && contentTypeValue.Type != JTokenType.Null)
-                        {
-                            string contentTypeInstance = ((string)contentTypeValue);
-                            result.ContentType = contentTypeInstance;
-                        }
-                        
-                        JToken attributesValue = responseDoc["attributes"];
-                        if (attributesValue != null && attributesValue.Type != JTokenType.Null)
-                        {
-                            SecretAttributes attributesInstance = new SecretAttributes();
-                            result.Attributes = attributesInstance;
-                            
-                            JToken enabledValue = attributesValue["enabled"];
-                            if (enabledValue != null && enabledValue.Type != JTokenType.Null)
-                            {
-                                bool enabledInstance = ((bool)enabledValue);
-                                attributesInstance.Enabled = enabledInstance;
-                            }
-                            
-                            JToken nbfValue = attributesValue["nbf"];
-                            if (nbfValue != null && nbfValue.Type != JTokenType.Null)
-                            {
-                                long nbfInstance = ((long)nbfValue);
-                                attributesInstance.NotBefore = nbfInstance;
-                            }
-                            
-                            JToken expValue = attributesValue["exp"];
-                            if (expValue != null && expValue.Type != JTokenType.Null)
-                            {
-                                long expInstance = ((long)expValue);
-                                attributesInstance.Expires = expInstance;
-                            }
-                            
-                            JToken createdValue = attributesValue["created"];
-                            if (createdValue != null && createdValue.Type != JTokenType.Null)
-                            {
-                                long createdInstance = ((long)createdValue);
-                                attributesInstance.Created = createdInstance;
-                            }
-                            
-                            JToken updatedValue = attributesValue["updated"];
-                            if (updatedValue != null && updatedValue.Type != JTokenType.Null)
-                            {
-                                long updatedInstance = ((long)updatedValue);
-                                attributesInstance.Updated = updatedInstance;
-                            }
-                        }
-                        
-                        JToken tagsSequenceElement = ((JToken)responseDoc["tags"]);
-                        if (tagsSequenceElement != null && tagsSequenceElement.Type != JTokenType.Null)
-                        {
-                            foreach (JProperty property in tagsSequenceElement)
-                            {
-                                string tagsKey = ((string)property.Name);
-                                string tagsValue = ((string)property.Value);
-                                result.Tags.Add(tagsKey, tagsValue);
-                            }
-                        }
-                    }
+                    result = new SecretResponseMessageWithRawJsonContent();
+                    result.Response = responseContent;
                     
                     result.StatusCode = statusCode;
                     
@@ -473,10 +307,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public async Task<ListSecretsResponseMessage> ListAsync(string vault, int? top, CancellationToken cancellationToken)
+        public async Task<SecretResponseMessageWithRawJsonContent> ListAsync(string vault, int? top, CancellationToken cancellationToken)
         {
             // Validate
             if (vault == null)
@@ -555,103 +388,12 @@ namespace Microsoft.Azure.KeyVault
                     }
                     
                     // Create Result
-                    ListSecretsResponseMessage result = null;
+                    SecretResponseMessageWithRawJsonContent result = null;
                     // Deserialize Response
                     cancellationToken.ThrowIfCancellationRequested();
                     string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    result = new ListSecretsResponseMessage();
-                    JToken responseDoc = null;
-                    if (string.IsNullOrEmpty(responseContent) == false)
-                    {
-                        responseDoc = JToken.Parse(responseContent);
-                    }
-                    
-                    if (responseDoc != null && responseDoc.Type != JTokenType.Null)
-                    {
-                        JToken valueArray = responseDoc["value"];
-                        if (valueArray != null && valueArray.Type != JTokenType.Null)
-                        {
-                            foreach (JToken valueValue in ((JArray)valueArray))
-                            {
-                                ListSecretResponseMessage listSecretResponseMessageInstance = new ListSecretResponseMessage();
-                                result.Value.Add(listSecretResponseMessageInstance);
-                                
-                                JToken contentTypeValue = valueValue["contentType"];
-                                if (contentTypeValue != null && contentTypeValue.Type != JTokenType.Null)
-                                {
-                                    string contentTypeInstance = ((string)contentTypeValue);
-                                    listSecretResponseMessageInstance.ContentType = contentTypeInstance;
-                                }
-                                
-                                JToken idValue = valueValue["id"];
-                                if (idValue != null && idValue.Type != JTokenType.Null)
-                                {
-                                    string idInstance = ((string)idValue);
-                                    listSecretResponseMessageInstance.Id = idInstance;
-                                }
-                                
-                                JToken attributesValue = valueValue["attributes"];
-                                if (attributesValue != null && attributesValue.Type != JTokenType.Null)
-                                {
-                                    SecretAttributes attributesInstance = new SecretAttributes();
-                                    listSecretResponseMessageInstance.Attributes = attributesInstance;
-                                    
-                                    JToken enabledValue = attributesValue["enabled"];
-                                    if (enabledValue != null && enabledValue.Type != JTokenType.Null)
-                                    {
-                                        bool enabledInstance = ((bool)enabledValue);
-                                        attributesInstance.Enabled = enabledInstance;
-                                    }
-                                    
-                                    JToken nbfValue = attributesValue["nbf"];
-                                    if (nbfValue != null && nbfValue.Type != JTokenType.Null)
-                                    {
-                                        long nbfInstance = ((long)nbfValue);
-                                        attributesInstance.NotBefore = nbfInstance;
-                                    }
-                                    
-                                    JToken expValue = attributesValue["exp"];
-                                    if (expValue != null && expValue.Type != JTokenType.Null)
-                                    {
-                                        long expInstance = ((long)expValue);
-                                        attributesInstance.Expires = expInstance;
-                                    }
-                                    
-                                    JToken createdValue = attributesValue["created"];
-                                    if (createdValue != null && createdValue.Type != JTokenType.Null)
-                                    {
-                                        long createdInstance = ((long)createdValue);
-                                        attributesInstance.Created = createdInstance;
-                                    }
-                                    
-                                    JToken updatedValue = attributesValue["updated"];
-                                    if (updatedValue != null && updatedValue.Type != JTokenType.Null)
-                                    {
-                                        long updatedInstance = ((long)updatedValue);
-                                        attributesInstance.Updated = updatedInstance;
-                                    }
-                                }
-                                
-                                JToken tagsSequenceElement = ((JToken)valueValue["tags"]);
-                                if (tagsSequenceElement != null && tagsSequenceElement.Type != JTokenType.Null)
-                                {
-                                    foreach (JProperty property in tagsSequenceElement)
-                                    {
-                                        string tagsKey = ((string)property.Name);
-                                        string tagsValue = ((string)property.Value);
-                                        listSecretResponseMessageInstance.Tags.Add(tagsKey, tagsValue);
-                                    }
-                                }
-                            }
-                        }
-                        
-                        JToken nextLinkValue = responseDoc["nextLink"];
-                        if (nextLinkValue != null && nextLinkValue.Type != JTokenType.Null)
-                        {
-                            string nextLinkInstance = ((string)nextLinkValue);
-                            result.NextLink = nextLinkInstance;
-                        }
-                    }
+                    result = new SecretResponseMessageWithRawJsonContent();
+                    result.Response = responseContent;
                     
                     result.StatusCode = statusCode;
                     
@@ -688,10 +430,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public async Task<ListSecretsResponseMessage> ListNextAsync(string nextLink, CancellationToken cancellationToken)
+        public async Task<SecretResponseMessageWithRawJsonContent> ListNextAsync(string nextLink, CancellationToken cancellationToken)
         {
             // Validate
             if (nextLink == null)
@@ -758,103 +499,12 @@ namespace Microsoft.Azure.KeyVault
                     }
                     
                     // Create Result
-                    ListSecretsResponseMessage result = null;
+                    SecretResponseMessageWithRawJsonContent result = null;
                     // Deserialize Response
                     cancellationToken.ThrowIfCancellationRequested();
                     string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    result = new ListSecretsResponseMessage();
-                    JToken responseDoc = null;
-                    if (string.IsNullOrEmpty(responseContent) == false)
-                    {
-                        responseDoc = JToken.Parse(responseContent);
-                    }
-                    
-                    if (responseDoc != null && responseDoc.Type != JTokenType.Null)
-                    {
-                        JToken valueArray = responseDoc["value"];
-                        if (valueArray != null && valueArray.Type != JTokenType.Null)
-                        {
-                            foreach (JToken valueValue in ((JArray)valueArray))
-                            {
-                                ListSecretResponseMessage listSecretResponseMessageInstance = new ListSecretResponseMessage();
-                                result.Value.Add(listSecretResponseMessageInstance);
-                                
-                                JToken contentTypeValue = valueValue["contentType"];
-                                if (contentTypeValue != null && contentTypeValue.Type != JTokenType.Null)
-                                {
-                                    string contentTypeInstance = ((string)contentTypeValue);
-                                    listSecretResponseMessageInstance.ContentType = contentTypeInstance;
-                                }
-                                
-                                JToken idValue = valueValue["id"];
-                                if (idValue != null && idValue.Type != JTokenType.Null)
-                                {
-                                    string idInstance = ((string)idValue);
-                                    listSecretResponseMessageInstance.Id = idInstance;
-                                }
-                                
-                                JToken attributesValue = valueValue["attributes"];
-                                if (attributesValue != null && attributesValue.Type != JTokenType.Null)
-                                {
-                                    SecretAttributes attributesInstance = new SecretAttributes();
-                                    listSecretResponseMessageInstance.Attributes = attributesInstance;
-                                    
-                                    JToken enabledValue = attributesValue["enabled"];
-                                    if (enabledValue != null && enabledValue.Type != JTokenType.Null)
-                                    {
-                                        bool enabledInstance = ((bool)enabledValue);
-                                        attributesInstance.Enabled = enabledInstance;
-                                    }
-                                    
-                                    JToken nbfValue = attributesValue["nbf"];
-                                    if (nbfValue != null && nbfValue.Type != JTokenType.Null)
-                                    {
-                                        long nbfInstance = ((long)nbfValue);
-                                        attributesInstance.NotBefore = nbfInstance;
-                                    }
-                                    
-                                    JToken expValue = attributesValue["exp"];
-                                    if (expValue != null && expValue.Type != JTokenType.Null)
-                                    {
-                                        long expInstance = ((long)expValue);
-                                        attributesInstance.Expires = expInstance;
-                                    }
-                                    
-                                    JToken createdValue = attributesValue["created"];
-                                    if (createdValue != null && createdValue.Type != JTokenType.Null)
-                                    {
-                                        long createdInstance = ((long)createdValue);
-                                        attributesInstance.Created = createdInstance;
-                                    }
-                                    
-                                    JToken updatedValue = attributesValue["updated"];
-                                    if (updatedValue != null && updatedValue.Type != JTokenType.Null)
-                                    {
-                                        long updatedInstance = ((long)updatedValue);
-                                        attributesInstance.Updated = updatedInstance;
-                                    }
-                                }
-                                
-                                JToken tagsSequenceElement = ((JToken)valueValue["tags"]);
-                                if (tagsSequenceElement != null && tagsSequenceElement.Type != JTokenType.Null)
-                                {
-                                    foreach (JProperty property in tagsSequenceElement)
-                                    {
-                                        string tagsKey = ((string)property.Name);
-                                        string tagsValue = ((string)property.Value);
-                                        listSecretResponseMessageInstance.Tags.Add(tagsKey, tagsValue);
-                                    }
-                                }
-                            }
-                        }
-                        
-                        JToken nextLinkValue = responseDoc["nextLink"];
-                        if (nextLinkValue != null && nextLinkValue.Type != JTokenType.Null)
-                        {
-                            string nextLinkInstance = ((string)nextLinkValue);
-                            result.NextLink = nextLinkInstance;
-                        }
-                    }
+                    result = new SecretResponseMessageWithRawJsonContent();
+                    result.Response = responseContent;
                     
                     result.StatusCode = statusCode;
                     
@@ -897,10 +547,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public async Task<ListSecretsResponseMessage> ListVersionsAsync(string vault, string secretName, int? top, CancellationToken cancellationToken)
+        public async Task<SecretResponseMessageWithRawJsonContent> ListVersionsAsync(string vault, string secretName, int? top, CancellationToken cancellationToken)
         {
             // Validate
             if (vault == null)
@@ -986,103 +635,12 @@ namespace Microsoft.Azure.KeyVault
                     }
                     
                     // Create Result
-                    ListSecretsResponseMessage result = null;
+                    SecretResponseMessageWithRawJsonContent result = null;
                     // Deserialize Response
                     cancellationToken.ThrowIfCancellationRequested();
                     string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    result = new ListSecretsResponseMessage();
-                    JToken responseDoc = null;
-                    if (string.IsNullOrEmpty(responseContent) == false)
-                    {
-                        responseDoc = JToken.Parse(responseContent);
-                    }
-                    
-                    if (responseDoc != null && responseDoc.Type != JTokenType.Null)
-                    {
-                        JToken valueArray = responseDoc["value"];
-                        if (valueArray != null && valueArray.Type != JTokenType.Null)
-                        {
-                            foreach (JToken valueValue in ((JArray)valueArray))
-                            {
-                                ListSecretResponseMessage listSecretResponseMessageInstance = new ListSecretResponseMessage();
-                                result.Value.Add(listSecretResponseMessageInstance);
-                                
-                                JToken contentTypeValue = valueValue["contentType"];
-                                if (contentTypeValue != null && contentTypeValue.Type != JTokenType.Null)
-                                {
-                                    string contentTypeInstance = ((string)contentTypeValue);
-                                    listSecretResponseMessageInstance.ContentType = contentTypeInstance;
-                                }
-                                
-                                JToken idValue = valueValue["id"];
-                                if (idValue != null && idValue.Type != JTokenType.Null)
-                                {
-                                    string idInstance = ((string)idValue);
-                                    listSecretResponseMessageInstance.Id = idInstance;
-                                }
-                                
-                                JToken attributesValue = valueValue["attributes"];
-                                if (attributesValue != null && attributesValue.Type != JTokenType.Null)
-                                {
-                                    SecretAttributes attributesInstance = new SecretAttributes();
-                                    listSecretResponseMessageInstance.Attributes = attributesInstance;
-                                    
-                                    JToken enabledValue = attributesValue["enabled"];
-                                    if (enabledValue != null && enabledValue.Type != JTokenType.Null)
-                                    {
-                                        bool enabledInstance = ((bool)enabledValue);
-                                        attributesInstance.Enabled = enabledInstance;
-                                    }
-                                    
-                                    JToken nbfValue = attributesValue["nbf"];
-                                    if (nbfValue != null && nbfValue.Type != JTokenType.Null)
-                                    {
-                                        long nbfInstance = ((long)nbfValue);
-                                        attributesInstance.NotBefore = nbfInstance;
-                                    }
-                                    
-                                    JToken expValue = attributesValue["exp"];
-                                    if (expValue != null && expValue.Type != JTokenType.Null)
-                                    {
-                                        long expInstance = ((long)expValue);
-                                        attributesInstance.Expires = expInstance;
-                                    }
-                                    
-                                    JToken createdValue = attributesValue["created"];
-                                    if (createdValue != null && createdValue.Type != JTokenType.Null)
-                                    {
-                                        long createdInstance = ((long)createdValue);
-                                        attributesInstance.Created = createdInstance;
-                                    }
-                                    
-                                    JToken updatedValue = attributesValue["updated"];
-                                    if (updatedValue != null && updatedValue.Type != JTokenType.Null)
-                                    {
-                                        long updatedInstance = ((long)updatedValue);
-                                        attributesInstance.Updated = updatedInstance;
-                                    }
-                                }
-                                
-                                JToken tagsSequenceElement = ((JToken)valueValue["tags"]);
-                                if (tagsSequenceElement != null && tagsSequenceElement.Type != JTokenType.Null)
-                                {
-                                    foreach (JProperty property in tagsSequenceElement)
-                                    {
-                                        string tagsKey = ((string)property.Name);
-                                        string tagsValue = ((string)property.Value);
-                                        listSecretResponseMessageInstance.Tags.Add(tagsKey, tagsValue);
-                                    }
-                                }
-                            }
-                        }
-                        
-                        JToken nextLinkValue = responseDoc["nextLink"];
-                        if (nextLinkValue != null && nextLinkValue.Type != JTokenType.Null)
-                        {
-                            string nextLinkInstance = ((string)nextLinkValue);
-                            result.NextLink = nextLinkInstance;
-                        }
-                    }
+                    result = new SecretResponseMessageWithRawJsonContent();
+                    result.Response = responseContent;
                     
                     result.StatusCode = statusCode;
                     
@@ -1119,10 +677,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public async Task<ListSecretsResponseMessage> ListVersionsNextAsync(string nextLink, CancellationToken cancellationToken)
+        public async Task<SecretResponseMessageWithRawJsonContent> ListVersionsNextAsync(string nextLink, CancellationToken cancellationToken)
         {
             // Validate
             if (nextLink == null)
@@ -1189,103 +746,12 @@ namespace Microsoft.Azure.KeyVault
                     }
                     
                     // Create Result
-                    ListSecretsResponseMessage result = null;
+                    SecretResponseMessageWithRawJsonContent result = null;
                     // Deserialize Response
                     cancellationToken.ThrowIfCancellationRequested();
                     string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    result = new ListSecretsResponseMessage();
-                    JToken responseDoc = null;
-                    if (string.IsNullOrEmpty(responseContent) == false)
-                    {
-                        responseDoc = JToken.Parse(responseContent);
-                    }
-                    
-                    if (responseDoc != null && responseDoc.Type != JTokenType.Null)
-                    {
-                        JToken valueArray = responseDoc["value"];
-                        if (valueArray != null && valueArray.Type != JTokenType.Null)
-                        {
-                            foreach (JToken valueValue in ((JArray)valueArray))
-                            {
-                                ListSecretResponseMessage listSecretResponseMessageInstance = new ListSecretResponseMessage();
-                                result.Value.Add(listSecretResponseMessageInstance);
-                                
-                                JToken contentTypeValue = valueValue["contentType"];
-                                if (contentTypeValue != null && contentTypeValue.Type != JTokenType.Null)
-                                {
-                                    string contentTypeInstance = ((string)contentTypeValue);
-                                    listSecretResponseMessageInstance.ContentType = contentTypeInstance;
-                                }
-                                
-                                JToken idValue = valueValue["id"];
-                                if (idValue != null && idValue.Type != JTokenType.Null)
-                                {
-                                    string idInstance = ((string)idValue);
-                                    listSecretResponseMessageInstance.Id = idInstance;
-                                }
-                                
-                                JToken attributesValue = valueValue["attributes"];
-                                if (attributesValue != null && attributesValue.Type != JTokenType.Null)
-                                {
-                                    SecretAttributes attributesInstance = new SecretAttributes();
-                                    listSecretResponseMessageInstance.Attributes = attributesInstance;
-                                    
-                                    JToken enabledValue = attributesValue["enabled"];
-                                    if (enabledValue != null && enabledValue.Type != JTokenType.Null)
-                                    {
-                                        bool enabledInstance = ((bool)enabledValue);
-                                        attributesInstance.Enabled = enabledInstance;
-                                    }
-                                    
-                                    JToken nbfValue = attributesValue["nbf"];
-                                    if (nbfValue != null && nbfValue.Type != JTokenType.Null)
-                                    {
-                                        long nbfInstance = ((long)nbfValue);
-                                        attributesInstance.NotBefore = nbfInstance;
-                                    }
-                                    
-                                    JToken expValue = attributesValue["exp"];
-                                    if (expValue != null && expValue.Type != JTokenType.Null)
-                                    {
-                                        long expInstance = ((long)expValue);
-                                        attributesInstance.Expires = expInstance;
-                                    }
-                                    
-                                    JToken createdValue = attributesValue["created"];
-                                    if (createdValue != null && createdValue.Type != JTokenType.Null)
-                                    {
-                                        long createdInstance = ((long)createdValue);
-                                        attributesInstance.Created = createdInstance;
-                                    }
-                                    
-                                    JToken updatedValue = attributesValue["updated"];
-                                    if (updatedValue != null && updatedValue.Type != JTokenType.Null)
-                                    {
-                                        long updatedInstance = ((long)updatedValue);
-                                        attributesInstance.Updated = updatedInstance;
-                                    }
-                                }
-                                
-                                JToken tagsSequenceElement = ((JToken)valueValue["tags"]);
-                                if (tagsSequenceElement != null && tagsSequenceElement.Type != JTokenType.Null)
-                                {
-                                    foreach (JProperty property in tagsSequenceElement)
-                                    {
-                                        string tagsKey = ((string)property.Name);
-                                        string tagsValue = ((string)property.Value);
-                                        listSecretResponseMessageInstance.Tags.Add(tagsKey, tagsValue);
-                                    }
-                                }
-                            }
-                        }
-                        
-                        JToken nextLinkValue = responseDoc["nextLink"];
-                        if (nextLinkValue != null && nextLinkValue.Type != JTokenType.Null)
-                        {
-                            string nextLinkInstance = ((string)nextLinkValue);
-                            result.NextLink = nextLinkInstance;
-                        }
-                    }
+                    result = new SecretResponseMessageWithRawJsonContent();
+                    result.Response = responseContent;
                     
                     result.StatusCode = statusCode;
                     
@@ -1325,10 +791,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public async Task<SecretResponseMessage> SetAsync(string secretIdentifier, SecretRequestMessage request, CancellationToken cancellationToken)
+        public async Task<SecretResponseMessageWithRawJsonContent> SetAsync(string secretIdentifier, SecretRequestMessageWithRawJsonContent request, CancellationToken cancellationToken)
         {
             // Validate
             if (secretIdentifier == null)
@@ -1380,69 +845,7 @@ namespace Microsoft.Azure.KeyVault
                 await this.Client.Credentials.ProcessHttpRequestAsync(httpRequest, cancellationToken).ConfigureAwait(false);
                 
                 // Serialize Request
-                string requestContent = null;
-                JToken requestDoc = null;
-                
-                JObject secretRequestMessageValue = new JObject();
-                requestDoc = secretRequestMessageValue;
-                
-                if (request.ContentType != null)
-                {
-                    secretRequestMessageValue["contentType"] = request.ContentType;
-                }
-                
-                if (request.Value != null)
-                {
-                    secretRequestMessageValue["value"] = request.Value;
-                }
-                
-                if (request.Attributes != null)
-                {
-                    JObject attributesValue = new JObject();
-                    secretRequestMessageValue["attributes"] = attributesValue;
-                    
-                    if (request.Attributes.Enabled != null)
-                    {
-                        attributesValue["enabled"] = request.Attributes.Enabled.Value;
-                    }
-                    
-                    if (request.Attributes.NotBefore != null)
-                    {
-                        attributesValue["nbf"] = request.Attributes.NotBefore.Value;
-                    }
-                    
-                    if (request.Attributes.Expires != null)
-                    {
-                        attributesValue["exp"] = request.Attributes.Expires.Value;
-                    }
-                    
-                    if (request.Attributes.Created != null)
-                    {
-                        attributesValue["created"] = request.Attributes.Created.Value;
-                    }
-                    
-                    if (request.Attributes.Updated != null)
-                    {
-                        attributesValue["updated"] = request.Attributes.Updated.Value;
-                    }
-                }
-                
-                if (request.Tags != null)
-                {
-                    if (request.Tags is ILazyCollection == false || ((ILazyCollection)request.Tags).IsInitialized)
-                    {
-                        JObject tagsDictionary = new JObject();
-                        foreach (KeyValuePair<string, string> pair in request.Tags)
-                        {
-                            string tagsKey = pair.Key;
-                            string tagsValue = pair.Value;
-                            tagsDictionary[tagsKey] = tagsValue;
-                        }
-                        secretRequestMessageValue["tags"] = tagsDictionary;
-                    }
-                }
-                
-                requestContent = requestDoc.ToString(Newtonsoft.Json.Formatting.Indented);
+                string requestContent = request.RawJsonRequest;
                 httpRequest.Content = new StringContent(requestContent, Encoding.UTF8);
                 httpRequest.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 
@@ -1473,93 +876,12 @@ namespace Microsoft.Azure.KeyVault
                     }
                     
                     // Create Result
-                    SecretResponseMessage result = null;
+                    SecretResponseMessageWithRawJsonContent result = null;
                     // Deserialize Response
                     cancellationToken.ThrowIfCancellationRequested();
                     string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    result = new SecretResponseMessage();
-                    JToken responseDoc = null;
-                    if (string.IsNullOrEmpty(responseContent) == false)
-                    {
-                        responseDoc = JToken.Parse(responseContent);
-                    }
-                    
-                    if (responseDoc != null && responseDoc.Type != JTokenType.Null)
-                    {
-                        JToken idValue = responseDoc["id"];
-                        if (idValue != null && idValue.Type != JTokenType.Null)
-                        {
-                            string idInstance = ((string)idValue);
-                            result.Id = idInstance;
-                        }
-                        
-                        JToken valueValue = responseDoc["value"];
-                        if (valueValue != null && valueValue.Type != JTokenType.Null)
-                        {
-                            string valueInstance = ((string)valueValue);
-                            result.Value = valueInstance;
-                        }
-                        
-                        JToken contentTypeValue = responseDoc["contentType"];
-                        if (contentTypeValue != null && contentTypeValue.Type != JTokenType.Null)
-                        {
-                            string contentTypeInstance = ((string)contentTypeValue);
-                            result.ContentType = contentTypeInstance;
-                        }
-                        
-                        JToken attributesValue2 = responseDoc["attributes"];
-                        if (attributesValue2 != null && attributesValue2.Type != JTokenType.Null)
-                        {
-                            SecretAttributes attributesInstance = new SecretAttributes();
-                            result.Attributes = attributesInstance;
-                            
-                            JToken enabledValue = attributesValue2["enabled"];
-                            if (enabledValue != null && enabledValue.Type != JTokenType.Null)
-                            {
-                                bool enabledInstance = ((bool)enabledValue);
-                                attributesInstance.Enabled = enabledInstance;
-                            }
-                            
-                            JToken nbfValue = attributesValue2["nbf"];
-                            if (nbfValue != null && nbfValue.Type != JTokenType.Null)
-                            {
-                                long nbfInstance = ((long)nbfValue);
-                                attributesInstance.NotBefore = nbfInstance;
-                            }
-                            
-                            JToken expValue = attributesValue2["exp"];
-                            if (expValue != null && expValue.Type != JTokenType.Null)
-                            {
-                                long expInstance = ((long)expValue);
-                                attributesInstance.Expires = expInstance;
-                            }
-                            
-                            JToken createdValue = attributesValue2["created"];
-                            if (createdValue != null && createdValue.Type != JTokenType.Null)
-                            {
-                                long createdInstance = ((long)createdValue);
-                                attributesInstance.Created = createdInstance;
-                            }
-                            
-                            JToken updatedValue = attributesValue2["updated"];
-                            if (updatedValue != null && updatedValue.Type != JTokenType.Null)
-                            {
-                                long updatedInstance = ((long)updatedValue);
-                                attributesInstance.Updated = updatedInstance;
-                            }
-                        }
-                        
-                        JToken tagsSequenceElement = ((JToken)responseDoc["tags"]);
-                        if (tagsSequenceElement != null && tagsSequenceElement.Type != JTokenType.Null)
-                        {
-                            foreach (JProperty property in tagsSequenceElement)
-                            {
-                                string tagsKey2 = ((string)property.Name);
-                                string tagsValue2 = ((string)property.Value);
-                                result.Tags.Add(tagsKey2, tagsValue2);
-                            }
-                        }
-                    }
+                    result = new SecretResponseMessageWithRawJsonContent();
+                    result.Response = responseContent;
                     
                     result.StatusCode = statusCode;
                     
@@ -1599,10 +921,9 @@ namespace Microsoft.Azure.KeyVault
         /// Cancellation token.
         /// </param>
         /// <returns>
-        /// A standard service response including an HTTP status code and
-        /// request ID.
+        /// Represents the response to a secret operation request.
         /// </returns>
-        public async Task<SecretResponseMessage> UpdateAsync(string secretIdentifier, UpdateSecretRequestMessage request, CancellationToken cancellationToken)
+        public async Task<SecretResponseMessageWithRawJsonContent> UpdateAsync(string secretIdentifier, SecretRequestMessageWithRawJsonContent request, CancellationToken cancellationToken)
         {
             // Validate
             if (secretIdentifier == null)
@@ -1654,69 +975,7 @@ namespace Microsoft.Azure.KeyVault
                 await this.Client.Credentials.ProcessHttpRequestAsync(httpRequest, cancellationToken).ConfigureAwait(false);
                 
                 // Serialize Request
-                string requestContent = null;
-                JToken requestDoc = null;
-                
-                JObject updateSecretRequestMessageValue = new JObject();
-                requestDoc = updateSecretRequestMessageValue;
-                
-                if (request.ContentType != null)
-                {
-                    updateSecretRequestMessageValue["contentType"] = request.ContentType;
-                }
-                
-                if (request.Id != null)
-                {
-                    updateSecretRequestMessageValue["id"] = request.Id;
-                }
-                
-                if (request.Attributes != null)
-                {
-                    JObject attributesValue = new JObject();
-                    updateSecretRequestMessageValue["attributes"] = attributesValue;
-                    
-                    if (request.Attributes.Enabled != null)
-                    {
-                        attributesValue["enabled"] = request.Attributes.Enabled.Value;
-                    }
-                    
-                    if (request.Attributes.NotBefore != null)
-                    {
-                        attributesValue["nbf"] = request.Attributes.NotBefore.Value;
-                    }
-                    
-                    if (request.Attributes.Expires != null)
-                    {
-                        attributesValue["exp"] = request.Attributes.Expires.Value;
-                    }
-                    
-                    if (request.Attributes.Created != null)
-                    {
-                        attributesValue["created"] = request.Attributes.Created.Value;
-                    }
-                    
-                    if (request.Attributes.Updated != null)
-                    {
-                        attributesValue["updated"] = request.Attributes.Updated.Value;
-                    }
-                }
-                
-                if (request.Tags != null)
-                {
-                    if (request.Tags is ILazyCollection == false || ((ILazyCollection)request.Tags).IsInitialized)
-                    {
-                        JObject tagsDictionary = new JObject();
-                        foreach (KeyValuePair<string, string> pair in request.Tags)
-                        {
-                            string tagsKey = pair.Key;
-                            string tagsValue = pair.Value;
-                            tagsDictionary[tagsKey] = tagsValue;
-                        }
-                        updateSecretRequestMessageValue["tags"] = tagsDictionary;
-                    }
-                }
-                
-                requestContent = requestDoc.ToString(Newtonsoft.Json.Formatting.Indented);
+                string requestContent = request.RawJsonRequest;
                 httpRequest.Content = new StringContent(requestContent, Encoding.UTF8);
                 httpRequest.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 
@@ -1747,86 +1006,12 @@ namespace Microsoft.Azure.KeyVault
                     }
                     
                     // Create Result
-                    SecretResponseMessage result = null;
+                    SecretResponseMessageWithRawJsonContent result = null;
                     // Deserialize Response
                     cancellationToken.ThrowIfCancellationRequested();
                     string responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    result = new SecretResponseMessage();
-                    JToken responseDoc = null;
-                    if (string.IsNullOrEmpty(responseContent) == false)
-                    {
-                        responseDoc = JToken.Parse(responseContent);
-                    }
-                    
-                    if (responseDoc != null && responseDoc.Type != JTokenType.Null)
-                    {
-                        JToken contentTypeValue = responseDoc["contentType"];
-                        if (contentTypeValue != null && contentTypeValue.Type != JTokenType.Null)
-                        {
-                            string contentTypeInstance = ((string)contentTypeValue);
-                            result.ContentType = contentTypeInstance;
-                        }
-                        
-                        JToken idValue = responseDoc["id"];
-                        if (idValue != null && idValue.Type != JTokenType.Null)
-                        {
-                            string idInstance = ((string)idValue);
-                            result.Id = idInstance;
-                        }
-                        
-                        JToken attributesValue2 = responseDoc["attributes"];
-                        if (attributesValue2 != null && attributesValue2.Type != JTokenType.Null)
-                        {
-                            SecretAttributes attributesInstance = new SecretAttributes();
-                            result.Attributes = attributesInstance;
-                            
-                            JToken enabledValue = attributesValue2["enabled"];
-                            if (enabledValue != null && enabledValue.Type != JTokenType.Null)
-                            {
-                                bool enabledInstance = ((bool)enabledValue);
-                                attributesInstance.Enabled = enabledInstance;
-                            }
-                            
-                            JToken nbfValue = attributesValue2["nbf"];
-                            if (nbfValue != null && nbfValue.Type != JTokenType.Null)
-                            {
-                                long nbfInstance = ((long)nbfValue);
-                                attributesInstance.NotBefore = nbfInstance;
-                            }
-                            
-                            JToken expValue = attributesValue2["exp"];
-                            if (expValue != null && expValue.Type != JTokenType.Null)
-                            {
-                                long expInstance = ((long)expValue);
-                                attributesInstance.Expires = expInstance;
-                            }
-                            
-                            JToken createdValue = attributesValue2["created"];
-                            if (createdValue != null && createdValue.Type != JTokenType.Null)
-                            {
-                                long createdInstance = ((long)createdValue);
-                                attributesInstance.Created = createdInstance;
-                            }
-                            
-                            JToken updatedValue = attributesValue2["updated"];
-                            if (updatedValue != null && updatedValue.Type != JTokenType.Null)
-                            {
-                                long updatedInstance = ((long)updatedValue);
-                                attributesInstance.Updated = updatedInstance;
-                            }
-                        }
-                        
-                        JToken tagsSequenceElement = ((JToken)responseDoc["tags"]);
-                        if (tagsSequenceElement != null && tagsSequenceElement.Type != JTokenType.Null)
-                        {
-                            foreach (JProperty property in tagsSequenceElement)
-                            {
-                                string tagsKey2 = ((string)property.Name);
-                                string tagsValue2 = ((string)property.Value);
-                                result.Tags.Add(tagsKey2, tagsValue2);
-                            }
-                        }
-                    }
+                    result = new SecretResponseMessageWithRawJsonContent();
+                    result.Response = responseContent;
                     
                     result.StatusCode = statusCode;
                     

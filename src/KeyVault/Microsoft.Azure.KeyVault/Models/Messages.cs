@@ -1,13 +1,25 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="Messages.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>                                                                
-//------------------------------------------------------------------------------
+﻿//
+// Copyright © Microsoft Corporation, All Rights Reserved
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS
+// OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+// ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A
+// PARTICULAR PURPOSE, MERCHANTABILITY OR NON-INFRINGEMENT.
+//
+// See the Apache License, Version 2.0 for the specific language
+// governing permissions and limitations under the License.
 
 using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Runtime.Serialization;
-using Microsoft.KeyVault.WebKey;
+using Microsoft.Azure.KeyVault.WebKey;
+using Microsoft.Azure.KeyVault.WebKey.Json;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.KeyVault
@@ -31,6 +43,33 @@ namespace Microsoft.Azure.KeyVault
         public const string Tags = "tags";
         public const string ContentType = "contentType";
     }
+
+    #region Error Response Messages
+
+    [JsonObject]
+    public class Error
+    {
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = "code", Required = Required.Default)]
+        public string Code { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = "message", Required = Required.Default)]
+        public string Message { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalInfo { get; set; }
+    }
+
+    [JsonObject]
+    public class ErrorResponseMessage
+    {
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = "error", Required = Required.Default)]
+        public Error Error { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalInfo { get; set; }
+    }
+
+    #endregion
 
     #region Key Management   
 
@@ -91,7 +130,7 @@ namespace Microsoft.Azure.KeyVault
     }
 
     [JsonObject]
-    public class ListKeyResponseMessage
+    public class KeyItem
     {
         [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Kid, Required = Required.Always )]
         public string Kid { get; set; }
@@ -107,7 +146,7 @@ namespace Microsoft.Azure.KeyVault
     public class ListKeysResponseMessage
     {
         [JsonProperty( DefaultValueHandling = DefaultValueHandling.Include, NullValueHandling = NullValueHandling.Include, PropertyName = MessagePropertyNames.Value, Required = Required.Default )]
-        public IEnumerable<ListKeyResponseMessage> Value { get; set; }
+        public IEnumerable<KeyItem> Value { get; set; }
 
         [JsonProperty( DefaultValueHandling = DefaultValueHandling.Include, NullValueHandling = NullValueHandling.Include, PropertyName = MessagePropertyNames.NextLink, Required = Required.Default )]
         public string NextLink { get; set; }
@@ -203,7 +242,7 @@ namespace Microsoft.Azure.KeyVault
             }
 
             if ( Value != null && digestLength != 0 && Value.Length != digestLength )
-                throw new JsonSerializationException( string.Format( System.Globalization.CultureInfo.InvariantCulture, "Invalid digest length: {0} (expected {1} for algorithm \"{2}\".", Value.Length, digestLength, Alg ) );
+                throw new JsonSerializationException( string.Format( CultureInfo.InvariantCulture, "Invalid digest length: {0} (expected {1} for algorithm \"{2}\".", Value.Length, digestLength, Alg ) );
         }
     }
 
@@ -250,45 +289,31 @@ namespace Microsoft.Azure.KeyVault
 
     #endregion
 
-    //#region Secret Messages
+    #region Secret Messages    
 
-    //[JsonObject]
-    //public class ListSecretResponseMessage
-    //{
-    //    [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Id, Required = Required.Always )]
-    //    public string Id { get; set; }
-    //}
+    [JsonObject]
+    public class SecretItem
+    {
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Id, Required = Required.Always)]
+        public string Id { get; set; }
 
-    //[JsonObject]
-    //public class ListSecretsResponseMessage
-    //{
-    //    [JsonProperty( DefaultValueHandling = DefaultValueHandling.Include, NullValueHandling = NullValueHandling.Include, PropertyName = MessagePropertyNames.Value, Required = Required.Default )]
-    //    public IEnumerable<ListSecretResponseMessage> Value { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Attributes, Required = Required.Always)]
+        public SecretAttributes Attributes { get; set; }
 
-    //    [JsonProperty( DefaultValueHandling = DefaultValueHandling.Include, NullValueHandling = NullValueHandling.Include, PropertyName = MessagePropertyNames.NextLink, Required = Required.Default )]
-    //    public string NextLink { get; set; }
-    //}
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Tags, Required = Required.Default)]
+        public Dictionary<string, string> Tags { get; set; }
+    }
 
-    //[JsonObject]
-    //public class SecretRequestMessage
-    //{
-    //    [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Value, Required = Required.Always )]
-    //    public string Value { get; set; }
+    [JsonObject]
+    public class ListSecretsResponseMessage
+    {
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include, NullValueHandling = NullValueHandling.Include, PropertyName = MessagePropertyNames.Value, Required = Required.Default)]
+        public IEnumerable<SecretItem> Value { get; set; }
 
-    //    [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Id, Required = Required.Default )]
-    //    public string Id { get; set; }
-    //}
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include, NullValueHandling = NullValueHandling.Include, PropertyName = MessagePropertyNames.NextLink, Required = Required.Default)]
+        public string NextLink { get; set; }
+    }
 
-    //[JsonObject]
-    //public class SecretResponseMessage
-    //{
-    //    [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Value, Required = Required.Always )]
-    //    public string Value { get; set; }
-
-    //    [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Id, Required = Required.Default )]
-    //    public string Id { get; set; }
-    //}
-
-    //#endregion
+    #endregion
 
 }

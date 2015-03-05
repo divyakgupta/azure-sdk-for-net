@@ -15,30 +15,24 @@
 // See the Apache License, Version 2.0 for the specific language
 // governing permissions and limitations under the License.
 
-
-namespace Microsoft.KeyVault.WebKey
+namespace Microsoft.Azure.KeyVault.WebKey
 {
-
     /// <summary>
-    /// Supported JsonWebKey operations
+    /// Supported JsonWebKey Algorithms
     /// </summary>
-    public static class JsonWebKeyOperation
+    public static class JsonWebKeyEncryptionAlgorithm
     {
-        public const string Encrypt = "encrypt";
-        public const string Decrypt = "decrypt";
-        public const string Sign    = "sign";
-        public const string Verify  = "verify";
-        public const string Wrap    = "wrapKey";
-        public const string Unwrap  = "unwrapKey";
+        public const string RSAOAEP = "RSA_OAEP";
+        public const string RSA15   = "RSA1_5";
 
         /// <summary>
-        /// All operations names. Use clone to avoid FxCop violation
+        /// All algorithms names. Use clone to avoid FxCop violation
         /// </summary>
-        public static string[] AllOperations
+        public static string[] AllAlgorithms
         {
-            get { return (string[])_allOperations.Clone(); }
+            get { return (string[])_allAlgorithms.Clone(); }
         }
 
-        private static readonly string[] _allOperations = new string[] { Encrypt, Decrypt, Sign, Verify, Wrap, Unwrap };
+        private static readonly string[] _allAlgorithms = { RSA15, RSAOAEP };
     }
-}
+ }

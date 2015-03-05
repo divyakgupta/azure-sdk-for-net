@@ -20,33 +20,48 @@
 // code is regenerated.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Hyak.Common;
 using Microsoft.Azure;
+using Microsoft.Azure.Management.KeyVault;
 
-namespace Microsoft.Azure.KeyVault.Internal
+namespace Microsoft.Azure.Management.KeyVault
 {
     /// <summary>
-    /// Represents the response to a key operation request.
+    /// A standard service response including an HTTP status code and request
+    /// ID.
     /// </summary>
-    public partial class KeyOpResponseMessageWithRawJsonContent : AzureOperationResponse
+    public partial class VaultListResponse : AzureOperationResponse
     {
-        private string _keyOpResponse;
+        private string _nextLink;
         
         /// <summary>
-        /// Optional.
+        /// Optional. Gets or sets the URL to get the next set of results.
         /// </summary>
-        public string KeyOpResponse
+        public string NextLink
         {
-            get { return this._keyOpResponse; }
-            set { this._keyOpResponse = value; }
+            get { return this._nextLink; }
+            set { this._nextLink = value; }
+        }
+        
+        private IList<ResourceBase> _vaults;
+        
+        /// <summary>
+        /// Optional. Gets or sets the list of resource groups.
+        /// </summary>
+        public IList<ResourceBase> Vaults
+        {
+            get { return this._vaults; }
+            set { this._vaults = value; }
         }
         
         /// <summary>
-        /// Initializes a new instance of the
-        /// KeyOpResponseMessageWithRawJsonContent class.
+        /// Initializes a new instance of the VaultListResponse class.
         /// </summary>
-        public KeyOpResponseMessageWithRawJsonContent()
+        public VaultListResponse()
         {
+            this.Vaults = new LazyList<ResourceBase>();
         }
     }
 }

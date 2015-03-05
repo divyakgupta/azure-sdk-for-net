@@ -21,71 +21,65 @@
 
 using System;
 using System.Linq;
+using Microsoft.Azure;
+using Microsoft.Azure.Management.KeyVault;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.Management.KeyVault
 {
-    public partial class SecretAttributes
+    /// <summary>
+    /// The Windows Azure management API provides a RESTful set of web services
+    /// that interact with Azure Key Vault.
+    /// </summary>
+    public partial interface IKeyVaultManagementClient : IDisposable
     {
-        private long? _created;
-        
         /// <summary>
-        /// Optional.
+        /// Gets the API version.
         /// </summary>
-        public long? Created
+        string ApiVersion
         {
-            get { return this._created; }
-            set { this._created = value; }
-        }
-        
-        private bool? _enabled;
-        
-        /// <summary>
-        /// Optional.
-        /// </summary>
-        public bool? Enabled
-        {
-            get { return this._enabled; }
-            set { this._enabled = value; }
-        }
-        
-        private long? _expires;
-        
-        /// <summary>
-        /// Optional.
-        /// </summary>
-        public long? Expires
-        {
-            get { return this._expires; }
-            set { this._expires = value; }
-        }
-        
-        private long? _notBefore;
-        
-        /// <summary>
-        /// Optional.
-        /// </summary>
-        public long? NotBefore
-        {
-            get { return this._notBefore; }
-            set { this._notBefore = value; }
-        }
-        
-        private long? _updated;
-        
-        /// <summary>
-        /// Optional.
-        /// </summary>
-        public long? Updated
-        {
-            get { return this._updated; }
-            set { this._updated = value; }
+            get; 
         }
         
         /// <summary>
-        /// Initializes a new instance of the SecretAttributes class.
+        /// Gets the URI used as the base for all cloud service requests.
         /// </summary>
-        public SecretAttributes()
+        Uri BaseUri
         {
+            get; 
+        }
+        
+        /// <summary>
+        /// Gets subscription credentials which uniquely identify Microsoft
+        /// Azure subscription. The subscription ID forms part of the URI for
+        /// every service call.
+        /// </summary>
+        SubscriptionCloudCredentials Credentials
+        {
+            get; 
+        }
+        
+        /// <summary>
+        /// Gets or sets the initial timeout for Long Running Operations.
+        /// </summary>
+        int LongRunningOperationInitialTimeout
+        {
+            get; set; 
+        }
+        
+        /// <summary>
+        /// Gets or sets the retry timeout for Long Running Operations.
+        /// </summary>
+        int LongRunningOperationRetryTimeout
+        {
+            get; set; 
+        }
+        
+        /// <summary>
+        /// Vault operations
+        /// </summary>
+        IVaultOperations Vaults
+        {
+            get; 
         }
     }
 }

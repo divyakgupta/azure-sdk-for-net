@@ -22,7 +22,7 @@
 using System;
 using System.Linq;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
     /// Azure Key Vault client

@@ -23,14 +23,16 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using Hyak.Common;
-using Microsoft.Azure.KeyVault.Internal;
+using Microsoft.Azure;
+using Microsoft.Azure.Management.KeyVault;
 
-namespace Microsoft.Azure.KeyVault.Internal
+namespace Microsoft.Azure.Management.KeyVault
 {
     /// <summary>
-    /// Azure Key Vault client
+    /// The Windows Azure management API provides a RESTful set of web services
+    /// that interact with Azure Key Vault.
     /// </summary>
-    public partial class KeyVaultInternalClient : ServiceClient<KeyVaultInternalClient>, IKeyVaultInternalClient
+    public partial class KeyVaultManagementClient : ServiceClient<KeyVaultManagementClient>, IKeyVaultManagementClient
     {
         private string _apiVersion;
         
@@ -52,15 +54,16 @@ namespace Microsoft.Azure.KeyVault.Internal
             get { return this._baseUri; }
         }
         
-        private KeyVaultCredential _credentials;
+        private SubscriptionCloudCredentials _credentials;
         
         /// <summary>
-        /// Credential
+        /// Gets subscription credentials which uniquely identify Microsoft
+        /// Azure subscription. The subscription ID forms part of the URI for
+        /// every service call.
         /// </summary>
-        public KeyVaultCredential Credentials
+        public SubscriptionCloudCredentials Credentials
         {
             get { return this._credentials; }
-            set { this._credentials = value; }
         }
         
         private int _longRunningOperationInitialTimeout;
@@ -85,51 +88,42 @@ namespace Microsoft.Azure.KeyVault.Internal
             set { this._longRunningOperationRetryTimeout = value; }
         }
         
-        private IKeyOperations _keys;
+        private IVaultOperations _vaults;
         
         /// <summary>
-        /// Key REST APIs
+        /// Vault operations
         /// </summary>
-        public virtual IKeyOperations Keys
+        public virtual IVaultOperations Vaults
         {
-            get { return this._keys; }
-        }
-        
-        private ISecretOperations _secrets;
-        
-        /// <summary>
-        /// Secrets REST APIs
-        /// </summary>
-        public virtual ISecretOperations Secrets
-        {
-            get { return this._secrets; }
+            get { return this._vaults; }
         }
         
         /// <summary>
-        /// Initializes a new instance of the KeyVaultInternalClient class.
+        /// Initializes a new instance of the KeyVaultManagementClient class.
         /// </summary>
-        public KeyVaultInternalClient()
+        public KeyVaultManagementClient()
             : base()
         {
-            this._keys = new KeyOperations(this);
-            this._secrets = new SecretOperations(this);
-            this._apiVersion = "2015-02-01-preview";
+            this._vaults = new VaultOperations(this);
+            this._apiVersion = "2014-04-01";
             this._longRunningOperationInitialTimeout = -1;
             this._longRunningOperationRetryTimeout = -1;
             this.HttpClient.Timeout = TimeSpan.FromSeconds(300);
         }
         
         /// <summary>
-        /// Initializes a new instance of the KeyVaultInternalClient class.
+        /// Initializes a new instance of the KeyVaultManagementClient class.
         /// </summary>
         /// <param name='credentials'>
-        /// Required. Credential
+        /// Required. Gets subscription credentials which uniquely identify
+        /// Microsoft Azure subscription. The subscription ID forms part of
+        /// the URI for every service call.
         /// </param>
         /// <param name='baseUri'>
         /// Optional. Gets the URI used as the base for all cloud service
         /// requests.
         /// </param>
-        public KeyVaultInternalClient(KeyVaultCredential credentials, Uri baseUri)
+        public KeyVaultManagementClient(SubscriptionCloudCredentials credentials, Uri baseUri)
             : this()
         {
             if (credentials == null)
@@ -147,12 +141,14 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Initializes a new instance of the KeyVaultInternalClient class.
+        /// Initializes a new instance of the KeyVaultManagementClient class.
         /// </summary>
         /// <param name='credentials'>
-        /// Required. Credential
+        /// Required. Gets subscription credentials which uniquely identify
+        /// Microsoft Azure subscription. The subscription ID forms part of
+        /// the URI for every service call.
         /// </param>
-        public KeyVaultInternalClient(KeyVaultCredential credentials)
+        public KeyVaultManagementClient(SubscriptionCloudCredentials credentials)
             : this()
         {
             if (credentials == null)
@@ -160,33 +156,34 @@ namespace Microsoft.Azure.KeyVault.Internal
                 throw new ArgumentNullException("credentials");
             }
             this._credentials = credentials;
-            this._baseUri = null;
+            this._baseUri = new Uri("https://management.azure.com");
             
             this.Credentials.InitializeServiceClient(this);
         }
         
         /// <summary>
-        /// Initializes a new instance of the KeyVaultInternalClient class.
+        /// Initializes a new instance of the KeyVaultManagementClient class.
         /// </summary>
         /// <param name='httpClient'>
         /// The Http client
         /// </param>
-        public KeyVaultInternalClient(HttpClient httpClient)
+        public KeyVaultManagementClient(HttpClient httpClient)
             : base(httpClient)
         {
-            this._keys = new KeyOperations(this);
-            this._secrets = new SecretOperations(this);
-            this._apiVersion = "2015-02-01-preview";
+            this._vaults = new VaultOperations(this);
+            this._apiVersion = "2014-04-01";
             this._longRunningOperationInitialTimeout = -1;
             this._longRunningOperationRetryTimeout = -1;
             this.HttpClient.Timeout = TimeSpan.FromSeconds(300);
         }
         
         /// <summary>
-        /// Initializes a new instance of the KeyVaultInternalClient class.
+        /// Initializes a new instance of the KeyVaultManagementClient class.
         /// </summary>
         /// <param name='credentials'>
-        /// Required. Credential
+        /// Required. Gets subscription credentials which uniquely identify
+        /// Microsoft Azure subscription. The subscription ID forms part of
+        /// the URI for every service call.
         /// </param>
         /// <param name='baseUri'>
         /// Optional. Gets the URI used as the base for all cloud service
@@ -195,7 +192,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         /// <param name='httpClient'>
         /// The Http client
         /// </param>
-        public KeyVaultInternalClient(KeyVaultCredential credentials, Uri baseUri, HttpClient httpClient)
+        public KeyVaultManagementClient(SubscriptionCloudCredentials credentials, Uri baseUri, HttpClient httpClient)
             : this(httpClient)
         {
             if (credentials == null)
@@ -213,15 +210,17 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Initializes a new instance of the KeyVaultInternalClient class.
+        /// Initializes a new instance of the KeyVaultManagementClient class.
         /// </summary>
         /// <param name='credentials'>
-        /// Required. Credential
+        /// Required. Gets subscription credentials which uniquely identify
+        /// Microsoft Azure subscription. The subscription ID forms part of
+        /// the URI for every service call.
         /// </param>
         /// <param name='httpClient'>
         /// The Http client
         /// </param>
-        public KeyVaultInternalClient(KeyVaultCredential credentials, HttpClient httpClient)
+        public KeyVaultManagementClient(SubscriptionCloudCredentials credentials, HttpClient httpClient)
             : this(httpClient)
         {
             if (credentials == null)
@@ -229,25 +228,25 @@ namespace Microsoft.Azure.KeyVault.Internal
                 throw new ArgumentNullException("credentials");
             }
             this._credentials = credentials;
-            this._baseUri = null;
+            this._baseUri = new Uri("https://management.azure.com");
             
             this.Credentials.InitializeServiceClient(this);
         }
         
         /// <summary>
         /// Clones properties from current instance to another
-        /// KeyVaultInternalClient instance
+        /// KeyVaultManagementClient instance
         /// </summary>
         /// <param name='client'>
-        /// Instance of KeyVaultInternalClient to clone to
+        /// Instance of KeyVaultManagementClient to clone to
         /// </param>
-        protected override void Clone(ServiceClient<KeyVaultInternalClient> client)
+        protected override void Clone(ServiceClient<KeyVaultManagementClient> client)
         {
             base.Clone(client);
             
-            if (client is KeyVaultInternalClient)
+            if (client is KeyVaultManagementClient)
             {
-                KeyVaultInternalClient clonedClient = ((KeyVaultInternalClient)client);
+                KeyVaultManagementClient clonedClient = ((KeyVaultManagementClient)client);
                 
                 clonedClient._credentials = this._credentials;
                 clonedClient._baseUri = this._baseUri;

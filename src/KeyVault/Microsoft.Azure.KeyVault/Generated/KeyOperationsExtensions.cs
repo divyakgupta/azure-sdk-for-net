@@ -23,9 +23,9 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.KeyVault.Internal;
 
-namespace Microsoft.Azure.KeyVault
+namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
     /// Azure Key Vault client
@@ -36,7 +36,7 @@ namespace Microsoft.Azure.KeyVault
         /// Backup key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -57,7 +57,7 @@ namespace Microsoft.Azure.KeyVault
         /// Backup key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -74,7 +74,7 @@ namespace Microsoft.Azure.KeyVault
         /// Create key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -101,7 +101,7 @@ namespace Microsoft.Azure.KeyVault
         /// Create key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -124,7 +124,7 @@ namespace Microsoft.Azure.KeyVault
         /// Decrypt
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -148,7 +148,7 @@ namespace Microsoft.Azure.KeyVault
         /// Decrypt
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -168,7 +168,7 @@ namespace Microsoft.Azure.KeyVault
         /// Delete key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -192,7 +192,7 @@ namespace Microsoft.Azure.KeyVault
         /// Delete key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -212,7 +212,7 @@ namespace Microsoft.Azure.KeyVault
         /// Encrypt
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -236,7 +236,7 @@ namespace Microsoft.Azure.KeyVault
         /// Encrypt
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -256,7 +256,7 @@ namespace Microsoft.Azure.KeyVault
         /// Get a key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -277,7 +277,7 @@ namespace Microsoft.Azure.KeyVault
         /// Get a key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -294,7 +294,7 @@ namespace Microsoft.Azure.KeyVault
         /// Import key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -318,7 +318,7 @@ namespace Microsoft.Azure.KeyVault
         /// Import key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -338,7 +338,7 @@ namespace Microsoft.Azure.KeyVault
         /// List the keys in the vault
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -362,7 +362,7 @@ namespace Microsoft.Azure.KeyVault
         /// List the keys in the vault
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -382,7 +382,7 @@ namespace Microsoft.Azure.KeyVault
         /// List the next page of keys in the vault
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='nextLink'>
         /// Required.
@@ -403,7 +403,7 @@ namespace Microsoft.Azure.KeyVault
         /// List the next page of keys in the vault
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='nextLink'>
         /// Required.
@@ -420,7 +420,7 @@ namespace Microsoft.Azure.KeyVault
         /// List the versions of a key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -447,7 +447,7 @@ namespace Microsoft.Azure.KeyVault
         /// List the versions of a key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -470,7 +470,7 @@ namespace Microsoft.Azure.KeyVault
         /// List the next page of versions of a key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='nextLink'>
         /// Required.
@@ -491,7 +491,7 @@ namespace Microsoft.Azure.KeyVault
         /// List the next page of versions of a key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='nextLink'>
         /// Required.
@@ -508,7 +508,7 @@ namespace Microsoft.Azure.KeyVault
         /// Restore key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -532,7 +532,7 @@ namespace Microsoft.Azure.KeyVault
         /// Restore key
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='vault'>
         /// Required.
@@ -552,7 +552,7 @@ namespace Microsoft.Azure.KeyVault
         /// Sign
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -576,7 +576,7 @@ namespace Microsoft.Azure.KeyVault
         /// Sign
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -596,7 +596,7 @@ namespace Microsoft.Azure.KeyVault
         /// Encrypt
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -620,7 +620,7 @@ namespace Microsoft.Azure.KeyVault
         /// Encrypt
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -640,7 +640,7 @@ namespace Microsoft.Azure.KeyVault
         /// Update
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -664,7 +664,7 @@ namespace Microsoft.Azure.KeyVault
         /// Update
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -684,7 +684,7 @@ namespace Microsoft.Azure.KeyVault
         /// Verify
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -708,7 +708,7 @@ namespace Microsoft.Azure.KeyVault
         /// Verify
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -728,7 +728,7 @@ namespace Microsoft.Azure.KeyVault
         /// Encrypt
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -752,7 +752,7 @@ namespace Microsoft.Azure.KeyVault
         /// Encrypt
         /// </summary>
         /// <param name='operations'>
-        /// Reference to the Microsoft.Azure.KeyVault.IKeyOperations.
+        /// Reference to the Microsoft.Azure.KeyVault.Internal.IKeyOperations.
         /// </param>
         /// <param name='keyIdentifier'>
         /// Required.
