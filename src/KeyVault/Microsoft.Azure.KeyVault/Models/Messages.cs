@@ -214,39 +214,6 @@ namespace Microsoft.Azure.KeyVault
     }
 
     [JsonObject]
-    public class SignRequestMessage : KeyOpRequestMessage
-    {
-        [OnDeserialized]
-        internal void OnDeserialized( StreamingContext context )
-        {
-            // Detemrine digest length for algorithm.
-            // TODO: The wire messages should not contain this level of validation,
-            //       this should probably move to the KeyProvider implementatin.
-            var digestLength = 0;
-            switch ( Alg )
-            {
-                case JsonWebKeySignatureAlgorithm.RS256:
-                    digestLength = 256 / 8; // 256 bits
-                    break;
-
-                case JsonWebKeySignatureAlgorithm.RS384:
-                    digestLength = 384 / 8; // 384 bits
-                    break;
-
-                case JsonWebKeySignatureAlgorithm.RS512:
-                    digestLength = 512 / 8; // 512 bits
-                    break;
-
-                case JsonWebKeySignatureAlgorithm.RSNULL:
-                    break;
-            }
-
-            if ( Value != null && digestLength != 0 && Value.Length != digestLength )
-                throw new JsonSerializationException( string.Format( CultureInfo.InvariantCulture, "Invalid digest length: {0} (expected {1} for algorithm \"{2}\".", Value.Length, digestLength, Alg ) );
-        }
-    }
-
-    [JsonObject]
     public class VerifyRequestMessage : KeyOpRequestMessage
     {
         // Digest to be verified, in Base64URL.

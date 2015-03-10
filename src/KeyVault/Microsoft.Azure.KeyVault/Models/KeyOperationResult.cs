@@ -29,6 +29,6 @@ namespace Microsoft.Azure.KeyVault
         // Encrypted data.
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Value, Required = Required.Always)]
         [JsonConverter(typeof(Base64UrlConverter))]
-        public byte[] Value { get; set; }        
+        public byte[] Result { get; set; }        
     }
 }

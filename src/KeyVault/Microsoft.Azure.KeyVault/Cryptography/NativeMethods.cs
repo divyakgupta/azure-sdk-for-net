@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using Microsoft.Win32.SafeHandles;
 
-namespace Microsoft.KeyVault.Client.Cryptography
+namespace Microsoft.Azure.KeyVault.Cryptography
 {
     public static class NativeMethods
     {

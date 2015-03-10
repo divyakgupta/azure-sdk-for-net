@@ -20,7 +20,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Microsoft.KeyVault.Client.Cryptography;
+using Microsoft.Azure.KeyVault.Cryptography;
 using Microsoft.Azure.KeyVault.WebKey;
 using Microsoft.Win32.SafeHandles;
 
@@ -109,7 +109,7 @@ namespace Microsoft.Azure.KeyVault
 
                     var cipher_text = await client.EncryptDataAsync( (RSACryptoServiceProvider)provider, plaintext, algorithm == JsonWebKeyEncryptionAlgorithm.RSAOAEP ).ConfigureAwait( false );
 
-                    result = new KeyOperationResult( ){ Kid = key.Kid, Value = cipher_text };
+                    result = new KeyOperationResult( ){ Kid = key.Kid, Result = cipher_text };
                     break;
 
                 default:
@@ -418,7 +418,7 @@ namespace Microsoft.Azure.KeyVault
 
                     var encrypted_key = await client.WrapKeyAsync( (RSACryptoServiceProvider)provider, key, algorithm == JsonWebKeyEncryptionAlgorithm.RSAOAEP ).ConfigureAwait( false );
 
-                    result = new KeyOperationResult(){ Kid = wrappingKey.Kid, Value = encrypted_key };
+                    result = new KeyOperationResult(){ Kid = wrappingKey.Kid, Result = encrypted_key };
                     break;
 
                 default:

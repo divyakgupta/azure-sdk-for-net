@@ -28,7 +28,7 @@ namespace Microsoft.Azure.KeyVault
         /// </summary>
         /// <param name="seconds">The number of seconds since midnight (UTC) on 1st January 1970</param>
         /// <returns>The date in UTC form</returns>
-        public static DateTime FromUnixTime( int seconds )
+        public static DateTime FromUnixTime( long seconds )
         {
             return EpochDate.AddSeconds( seconds );
         }
@@ -37,7 +37,7 @@ namespace Microsoft.Azure.KeyVault
         /// Gets the current time as the number of seconds since midnight (UTC) on 1st January 1970
         /// </summary>
         /// <returns>The number of seconds since midnight (UTC) on 1st January 1970</returns>
-        public static int Now()
+        public static long Now()
         {
             return DateTime.UtcNow.ToUnixTime();
         }
@@ -47,9 +47,9 @@ namespace Microsoft.Azure.KeyVault
         /// </summary>
         /// <param name="dateTime">The date, in UTC form.</param>
         /// <returns>Number of seconds from January 1 1970.</returns>
-        public static int ToUnixTime( this DateTime dateTime )
+        public static long ToUnixTime( this DateTime dateTime )
         {
-            return ( int )dateTime.Subtract( EpochDate ).TotalSeconds;
+            return ( long )dateTime.Subtract( EpochDate ).TotalSeconds;
         }
     }
 }

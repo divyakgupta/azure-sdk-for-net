@@ -9,8 +9,8 @@
     <ProjectGuid>{493472CB-F9C0-4312-A8F1-399641926F5E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.KeyVault.WebKey</RootNamespace>
-    <AssemblyName>Microsoft.KeyVault.WebKey</AssemblyName>
+    <RootNamespace>Microsoft.Azure.KeyVault.WebKey</RootNamespace>
+    <AssemblyName>Microsoft.Azure.KeyVault.WebKey</AssemblyName>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\tools\Library.Settings.targets" />

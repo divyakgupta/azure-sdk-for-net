@@ -35,16 +35,18 @@ namespace Microsoft.Azure.KeyVault
     /// </summary>
     public class KeyVaultClient
     {
+        public delegate string AuthenticationCallback(string authority, string resource, string scope);
+
         private KeyVaultInternalClient InternalClient;
 
         #region Constructor
-        public KeyVaultClient(KeyVaultCredential.AuthenticationCallback authenticationCallback)
+        public KeyVaultClient(AuthenticationCallback authenticationCallback)
         {
             var credential = new KeyVaultCredential(authenticationCallback);
             InternalClient = new KeyVaultInternalClient(credential);
         }
 
-        public KeyVaultClient(KeyVaultCredential.AuthenticationCallback authenticationCallback, HttpClient httpClient)
+        public KeyVaultClient(AuthenticationCallback authenticationCallback, HttpClient httpClient)
         {
             var credential = new KeyVaultCredential(authenticationCallback);
             InternalClient = new KeyVaultInternalClient(credential, httpClient);
@@ -54,20 +56,20 @@ namespace Microsoft.Azure.KeyVault
         {
             InternalClient = internalClient;
         }
+        
+        #endregion
 
+        #region Key Crypto Operations
         public async Task<KeyOperationResult> EncryptDataAsync(string vault, string keyName, string keyVersion, string algorithm, byte[] plainText)
         {
-            var identifier = new KeyIdentifier(vault, keyName, keyVersion);            
+            var identifier = new KeyIdentifier(vault, keyName, keyVersion);
 
             return await EncryptDataAsync(
                 identifier.Identifier,
                 algorithm,
-                plainText);            
+                plainText);
         }
 
-        #endregion
-
-        #region Key Crypto Operations
         public async Task<KeyOperationResult> EncryptDataAsync(string keyIdentifier, string algorithm, byte[] plainText)
         {
             return await Do(async () =>
@@ -185,7 +187,7 @@ namespace Microsoft.Azure.KeyVault
             });
         }
 
-        public async Task<KeyBundle> GetKeyAsync(string vault, string keyName, string keyVersion)
+        public async Task<KeyBundle> GetKeyAsync(string vault, string keyName, string keyVersion = null)
         {
             var keyIdentifier = new KeyIdentifier(vault, keyName, keyVersion);
 
@@ -340,7 +342,7 @@ namespace Microsoft.Azure.KeyVault
             return await SetSecretAsync(secretIdentifier.BaseIdentifier, value, tags, contentType, enabled, active, expired);
         }
 
-        private async Task<Secret> SetSecretAsync(string secretIdentifier, SecureString value, Dictionary<string, string> tags, string contentType, bool enabled, bool active, bool expired)
+        private async Task<Secret> SetSecretAsync(string secretIdentifier, SecureString value, Dictionary<string, string> tags = null, string contentType = null, bool enabled = true, bool active = true, bool expired = false)
         {
             return await Do(async () =>
             {

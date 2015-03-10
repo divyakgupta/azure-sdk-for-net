@@ -27,13 +27,12 @@ using Hyak.Common;
 namespace Microsoft.Azure.KeyVault
 {
     public class KeyVaultCredential : CloudCredentials
-    {
-        public delegate string AuthenticationCallback(string authority, string resource, string scope);
-        public event AuthenticationCallback OnAuthenticate = null;
+    {        
+        public event KeyVaultClient.AuthenticationCallback OnAuthenticate = null;
 
         public string Token { get; set; }
 
-        public KeyVaultCredential(AuthenticationCallback authenticationCallback)
+        public KeyVaultCredential(KeyVaultClient.AuthenticationCallback authenticationCallback)
         {
             OnAuthenticate = authenticationCallback;
         }
