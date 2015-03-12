@@ -34,7 +34,7 @@ using Microsoft.Azure.KeyVault.Internal;
 namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
-    /// Secrets REST APIs
+    /// Operations for secrets in a vault
     /// </summary>
     internal partial class SecretOperations : IServiceOperations<KeyVaultInternalClient>, ISecretOperations
     {
@@ -61,7 +61,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Delete secret
+        /// Delete the specified secret
         /// </summary>
         /// <param name='secretIdentifier'>
         /// Required.
@@ -178,7 +178,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Get secret
+        /// Gets a secret
         /// </summary>
         /// <param name='secretIdentifier'>
         /// Required.
@@ -295,7 +295,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Get
+        /// List the secrets in the specified vault
         /// </summary>
         /// <param name='vault'>
         /// Required.
@@ -421,7 +421,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Get
+        /// List the next page of secrets in the specified vault
         /// </summary>
         /// <param name='nextLink'>
         /// Required.
@@ -532,7 +532,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Get
+        /// List the versions of a secret in the specified vault
         /// </summary>
         /// <param name='vault'>
         /// Required.
@@ -668,7 +668,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Get
+        /// List the versions of a secret in the specified vault
         /// </summary>
         /// <param name='nextLink'>
         /// Required.
@@ -779,7 +779,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Set secret
+        /// Sets a secret in the specified vault.
         /// </summary>
         /// <param name='secretIdentifier'>
         /// Required.
@@ -909,7 +909,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Update secret
+        /// Update the specified secret
         /// </summary>
         /// <param name='secretIdentifier'>
         /// Required.

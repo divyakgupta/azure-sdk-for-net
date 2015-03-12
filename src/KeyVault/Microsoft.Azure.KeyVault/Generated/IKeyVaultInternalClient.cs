@@ -25,9 +25,6 @@ using Microsoft.Azure.KeyVault.Internal;
 
 namespace Microsoft.Azure.KeyVault.Internal
 {
-    /// <summary>
-    /// Azure Key Vault client
-    /// </summary>
     public partial interface IKeyVaultInternalClient : IDisposable
     {
         /// <summary>
@@ -47,7 +44,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Credential
+        /// Gets or sets the credential
         /// </summary>
         KeyVaultCredential Credentials
         {
@@ -71,7 +68,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Key REST APIs
+        /// Cryptographic and management operations for keys in a vault
         /// </summary>
         IKeyOperations Keys
         {
@@ -79,7 +76,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Secrets REST APIs
+        /// Operations for secrets in a vault
         /// </summary>
         ISecretOperations Secrets
         {

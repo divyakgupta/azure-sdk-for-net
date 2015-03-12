@@ -28,12 +28,12 @@ using Microsoft.Azure.KeyVault.Internal;
 namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
-    /// Secrets REST APIs
+    /// Operations for secrets in a vault
     /// </summary>
     public partial interface ISecretOperations
     {
         /// <summary>
-        /// Delete secret
+        /// Delete the specified secret
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -44,7 +44,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<SecretResponseMessageWithRawJsonContent> DeleteAsync(string secretIdentifier, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Get secret
+        /// Gets a secret
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -55,7 +55,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<SecretResponseMessageWithRawJsonContent> GetAsync(string secretIdentifier, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Get
+        /// List the secrets in the specified vault
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -66,7 +66,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<SecretResponseMessageWithRawJsonContent> ListAsync(string vault, int? top, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Get
+        /// List the next page of secrets in the specified vault
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -77,7 +77,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<SecretResponseMessageWithRawJsonContent> ListNextAsync(string nextLink, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Get
+        /// List the versions of a secret in the specified vault
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -88,7 +88,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<SecretResponseMessageWithRawJsonContent> ListVersionsAsync(string vault, string secretName, int? top, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Get
+        /// List the versions of a secret in the specified vault
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -99,7 +99,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<SecretResponseMessageWithRawJsonContent> ListVersionsNextAsync(string nextLink, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Set secret
+        /// Sets a secret in the specified vault.
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -110,7 +110,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<SecretResponseMessageWithRawJsonContent> SetAsync(string secretIdentifier, SecretRequestMessageWithRawJsonContent request, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Update secret
+        /// Update the specified secret
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.

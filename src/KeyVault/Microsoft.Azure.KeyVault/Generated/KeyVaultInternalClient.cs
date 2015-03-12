@@ -27,9 +27,6 @@ using Microsoft.Azure.KeyVault.Internal;
 
 namespace Microsoft.Azure.KeyVault.Internal
 {
-    /// <summary>
-    /// Azure Key Vault client
-    /// </summary>
     public partial class KeyVaultInternalClient : ServiceClient<KeyVaultInternalClient>, IKeyVaultInternalClient
     {
         private string _apiVersion;
@@ -55,7 +52,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         private KeyVaultCredential _credentials;
         
         /// <summary>
-        /// Credential
+        /// Gets or sets the credential
         /// </summary>
         public KeyVaultCredential Credentials
         {
@@ -88,7 +85,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         private IKeyOperations _keys;
         
         /// <summary>
-        /// Key REST APIs
+        /// Cryptographic and management operations for keys in a vault
         /// </summary>
         public virtual IKeyOperations Keys
         {
@@ -98,7 +95,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         private ISecretOperations _secrets;
         
         /// <summary>
-        /// Secrets REST APIs
+        /// Operations for secrets in a vault
         /// </summary>
         public virtual ISecretOperations Secrets
         {
@@ -123,7 +120,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         /// Initializes a new instance of the KeyVaultInternalClient class.
         /// </summary>
         /// <param name='credentials'>
-        /// Required. Credential
+        /// Required. Gets or sets the credential
         /// </param>
         /// <param name='baseUri'>
         /// Optional. Gets the URI used as the base for all cloud service
@@ -150,7 +147,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         /// Initializes a new instance of the KeyVaultInternalClient class.
         /// </summary>
         /// <param name='credentials'>
-        /// Required. Credential
+        /// Required. Gets or sets the credential
         /// </param>
         public KeyVaultInternalClient(KeyVaultCredential credentials)
             : this()
@@ -186,7 +183,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         /// Initializes a new instance of the KeyVaultInternalClient class.
         /// </summary>
         /// <param name='credentials'>
-        /// Required. Credential
+        /// Required. Gets or sets the credential
         /// </param>
         /// <param name='baseUri'>
         /// Optional. Gets the URI used as the base for all cloud service
@@ -216,7 +213,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         /// Initializes a new instance of the KeyVaultInternalClient class.
         /// </summary>
         /// <param name='credentials'>
-        /// Required. Credential
+        /// Required. Gets or sets the credential
         /// </param>
         /// <param name='httpClient'>
         /// The Http client

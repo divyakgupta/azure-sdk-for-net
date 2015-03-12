@@ -28,12 +28,13 @@ using Microsoft.Azure.KeyVault.Internal;
 namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
-    /// Key REST APIs
+    /// Cryptographic and management operations for keys in a vault
     /// </summary>
     public partial interface IKeyOperations
     {
         /// <summary>
-        /// Backup key
+        /// Requests that a backup of the specified key be downloaded to the
+        /// client.
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -44,7 +45,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> BackupAsync(string keyIdentifier, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Create key
+        /// Creates a new, named, key in the specified vault.
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -55,7 +56,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> CreateAsync(string vault, string keyName, KeyOpRequestMessageWithRawJsonContent keyOpRequest, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Decrypt
+        /// Decrypts a single block of data.
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -66,7 +67,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> DecryptDataAsync(string keyIdentifier, KeyOpRequestMessageWithRawJsonContent keyOpRequest, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Delete key
+        /// Delete the specified key
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -77,7 +78,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> DeleteKeyAsync(string vault, string keyName, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Encrypt
+        /// Encrypts a single block of data.
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -88,7 +89,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> EncryptDataAsync(string keyIdentifier, KeyOpRequestMessageWithRawJsonContent keyOpRequest, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Get a key
+        /// Retrieves the public portion of a key plus its attributes
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -99,7 +100,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> GetAsync(string keyIdentifier, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Import key
+        /// Imports a key into the specified vault
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -154,7 +155,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> ListVersionsNextAsync(string nextLink, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Restore key
+        /// Restores the backup key in to a vault
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -165,7 +166,8 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> RestoreAsync(string vault, KeyOpRequestMessageWithRawJsonContent keyOpRequest, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Sign
+        /// Creates a signature from a digest using the specified key in the
+        /// vault
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -176,7 +178,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> SignAsync(string keyIdentifier, KeyOpRequestMessageWithRawJsonContent keyOpRequest, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Encrypt
+        /// Unwraps a symmetric key using the specified key in the vault
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -187,7 +189,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> UnwrapKeyAsync(string keyIdentifier, KeyOpRequestMessageWithRawJsonContent keyOpRequest, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Update
+        /// Updates the Key Attributes associated with the specified key
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -198,7 +200,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> UpdateAsync(string keyIdentifier, KeyOpRequestMessageWithRawJsonContent keyOpRequest, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Verify
+        /// Verifies a signature using the specified key
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.
@@ -209,7 +211,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         Task<KeyOpResponseMessageWithRawJsonContent> VerifyAsync(string keyIdentifier, KeyOpRequestMessageWithRawJsonContent keyOpRequest, CancellationToken cancellationToken);
         
         /// <summary>
-        /// Encrypt
+        /// Wraps a symmetric key using the specified key
         /// </summary>
         /// <param name='cancellationToken'>
         /// Cancellation token.

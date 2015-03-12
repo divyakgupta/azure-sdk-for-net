@@ -34,7 +34,7 @@ using Microsoft.Azure.KeyVault.Internal;
 namespace Microsoft.Azure.KeyVault.Internal
 {
     /// <summary>
-    /// Key REST APIs
+    /// Cryptographic and management operations for keys in a vault
     /// </summary>
     internal partial class KeyOperations : IServiceOperations<KeyVaultInternalClient>, IKeyOperations
     {
@@ -61,7 +61,8 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Backup key
+        /// Requests that a backup of the specified key be downloaded to the
+        /// client.
         /// </summary>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -179,7 +180,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Create key
+        /// Creates a new, named, key in the specified vault.
         /// </summary>
         /// <param name='vault'>
         /// Required.
@@ -320,7 +321,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Decrypt
+        /// Decrypts a single block of data.
         /// </summary>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -450,7 +451,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Delete key
+        /// Delete the specified key
         /// </summary>
         /// <param name='vault'>
         /// Required.
@@ -578,7 +579,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Encrypt
+        /// Encrypts a single block of data.
         /// </summary>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -708,7 +709,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Get a key
+        /// Retrieves the public portion of a key plus its attributes
         /// </summary>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -826,7 +827,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Import key
+        /// Imports a key into the specified vault
         /// </summary>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -1441,7 +1442,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Restore key
+        /// Restores the backup key in to a vault
         /// </summary>
         /// <param name='vault'>
         /// Required.
@@ -1572,7 +1573,8 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Sign
+        /// Creates a signature from a digest using the specified key in the
+        /// vault
         /// </summary>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -1702,7 +1704,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Encrypt
+        /// Unwraps a symmetric key using the specified key in the vault
         /// </summary>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -1832,7 +1834,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Update
+        /// Updates the Key Attributes associated with the specified key
         /// </summary>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -1963,7 +1965,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Verify
+        /// Verifies a signature using the specified key
         /// </summary>
         /// <param name='keyIdentifier'>
         /// Required.
@@ -2093,7 +2095,7 @@ namespace Microsoft.Azure.KeyVault.Internal
         }
         
         /// <summary>
-        /// Encrypt
+        /// Wraps a symmetric key using the specified key
         /// </summary>
         /// <param name='keyIdentifier'>
         /// Required.
