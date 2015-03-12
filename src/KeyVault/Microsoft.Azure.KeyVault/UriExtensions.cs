@@ -43,7 +43,7 @@ namespace Microsoft.Azure.KeyVault
         /// <summary>
         /// x-www-form-urlencoded a string without the requirement for System.Web
         /// </summary>
-        /// <param name="String"></param>
+        /// <param name="text">The string to encode</param>
         /// <returns></returns>
         // [Obsolete("Use System.Uri.EscapeDataString instead")]
         public static string UrlFormEncode(string text)

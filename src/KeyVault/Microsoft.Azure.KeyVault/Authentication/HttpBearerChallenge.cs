@@ -109,9 +109,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="key">The key to be retrieved</param>
         /// <param name="value">The value for the specified key</param>
         /// <returns>True when the key is found, false when it is not</returns>
-        public bool TryGetValue(string key, out string val)
+        public bool TryGetValue(string key, out string value)
         {
-            return _parameters.TryGetValue(key, out val);
+            return _parameters.TryGetValue(key, out value);
         }
 
         /// <summary>

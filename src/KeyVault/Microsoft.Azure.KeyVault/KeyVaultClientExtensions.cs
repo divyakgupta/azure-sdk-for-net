@@ -62,9 +62,9 @@ namespace Microsoft.Azure.KeyVault
         /// Encrypts a single block of data. The amount of data that may be encrypted is determined
         /// by the target key type and the encryption algorithm, e.g. RSA, RSA_OAEP
         /// </summary>
-        /// <param name="keyBundle">The key bundle</param>
+        /// <param name="keyBundle">The key bundle to use for encryption</param>
         /// <param name="algorithm">The encryption algorithm</param>
-        /// <param name="digest">The plain text to encrypt</param>
+        /// <param name="plaintext">The plain text to encrypt</param>
         /// <returns></returns>
         public static async Task<KeyOperationResult> EncryptDataAsync( this KeyVaultClient client, KeyBundle keyBundle, string algorithm, byte[] plaintext )
         {
@@ -78,9 +78,9 @@ namespace Microsoft.Azure.KeyVault
         /// Encrypts a single block of data. The amount of data that may be encrypted is determined
         /// by the target key type and the encryption algorithm, e.g. RSA, RSA_OAEP
         /// </summary>
-        /// <param name="key">The web key</param>
+        /// <param name="key">The web key to use for encryption</param>
         /// <param name="algorithm">The encryption algorithm</param>
-        /// <param name="digest">The plain text to encrypt</param>
+        /// <param name="plaintext">The plain text to encrypt</param>
         /// <returns></returns>
         public static async Task<KeyOperationResult> EncryptDataAsync( this KeyVaultClient client, JsonWebKey key, string algorithm, byte[] plaintext )
         {
@@ -143,8 +143,7 @@ namespace Microsoft.Azure.KeyVault
 
         /// <summary>
         /// Imports an X509 Certificate, including private key, to the specified vault.
-        /// </summary>
-        /// <param name="client">The KmsClient</param>
+        /// </summary>        
         /// <param name="vaultAddress">The vault address to import the key</param>
         /// <param name="certificate">The certificate to import</param>
         /// <returns></returns>
@@ -158,8 +157,7 @@ namespace Microsoft.Azure.KeyVault
 
         /// <summary>
         /// Imports an X509 Certificate, including private key, to the specified vault.
-        /// </summary>
-        /// <param name="client">The KmsClient</param>
+        /// </summary>        
         /// <param name="vaultAddress">The vault address to import the key</param>
         /// <param name="certificate">The certificate to import</param>
         /// <returns></returns>
@@ -197,8 +195,8 @@ namespace Microsoft.Azure.KeyVault
         /// Creates a signature from a digest using the specified key in the vault 
         /// </summary>
         /// <param name="keyBundle"> The key bundle of the signing key </param>
-        /// <param name="algorithm"> the signing algorithm </param>
-        /// <param name="digest"> the signing digest hash value </param>
+        /// <param name="algorithm">The signing algorithm </param>
+        /// <param name="digest">The signing digest hash value </param>
         /// <returns> signature </returns>
         public static async Task<KeyOperationResult> SignAsync( this KeyVaultClient client, KeyBundle keyBundle, string algorithm, byte[] digest )
         {
@@ -223,6 +221,13 @@ namespace Microsoft.Azure.KeyVault
             return await client.SignAsync( key.Kid, algorithm, digest ).ConfigureAwait( false );
         }
 
+        /// <summary>
+        /// Unwraps a symmetric key using the specified wrapping key and algorithm.
+        /// </summary>        
+        /// <param name="wrappingKey">The wrapping key</param>
+        /// <param name="wrappedKey">The symmetric key to unwrap</param>
+        /// <param name="algorithm">The algorithm to use</param>
+        /// <returns>The unwrapped key</returns>
         public static async Task<KeyOperationResult> UnwrapKeyAsync( this KeyVaultClient client, KeyBundle wrappingKey, byte[] wrappedKey, string algorithm )
         {
             if ( wrappingKey == null )
@@ -231,6 +236,13 @@ namespace Microsoft.Azure.KeyVault
             return await client.UnwrapKeyAsync( wrappingKey.Key, wrappedKey, algorithm ).ConfigureAwait( false );
         }
 
+        /// <summary>
+        /// Unwraps a symmetric key using the specified wrapping key and algorithm.
+        /// </summary>        
+        /// <param name="wrappingKey">The wrapping key</param>
+        /// <param name="wrappedKey">The symmetric key to unwrap</param>
+        /// <param name="algorithm">The algorithm to use</param>
+        /// <returns>The unwrapped key</returns>
         public static async Task<KeyOperationResult> UnwrapKeyAsync( this KeyVaultClient client, JsonWebKey wrappingKey, byte[] wrappedKey, string algorithm )
         {
             if ( wrappingKey == null )
@@ -244,26 +256,26 @@ namespace Microsoft.Azure.KeyVault
 
         
         /// <summary>
-        /// Wraps a symmetric key using the specified wrapping key and algorithm.
-        /// </summary>
-        /// <param name="client">The KMSClient instance</param>
-        /// <param name="wrappingKey">The wrapping key</param>
-        /// <param name="key">The key to wrap</param>
-        /// <param name="algorithm">The algorithm to use</param>
-        /// <returns>The wrapped key</returns>
+        /// Verifies a signature using the specified key
+        /// </summary>        
+        /// <param name="verifyKey">The verification key</param>
+        /// <param name="algorithm">The signing algorithm</param>
+        /// <param name="digest">The digest hash value</param>
+        /// <param name="signature">The signature to verify</param>
+        /// <returns>true if verification succeeds, false if verification fails</returns>
         public static async Task<bool> VerifyAsync( this KeyVaultClient client, KeyBundle verifyKey, string algorithm, byte[] digest, byte[] signature )
         {
             return await client.VerifyAsync( verifyKey.Key, algorithm, digest, signature ).ConfigureAwait( false );
         }
 
         /// <summary>
-        /// Wraps a symmetric key using the specified wrapping key and algorithm.
-        /// </summary>
-        /// <param name="client">The KMSClient instance</param>
-        /// <param name="wrappingKey">The wrapping key</param>
-        /// <param name="key">The key to wrap</param>
-        /// <param name="algorithm">The algorithm to use</param>
-        /// <returns>The wrapped key</returns>
+        /// Verifies a signature using the specified key
+        /// </summary>        
+        /// <param name="verifyKey">The verification key</param>
+        /// <param name="algorithm">The signing algorithm</param>
+        /// <param name="digest">The digest hash value</param>
+        /// <param name="signature">The signature to verify</param>
+        /// <returns>true if verification succeeds, false if verification fails</returns>
         public static async Task<bool> VerifyAsync( this KeyVaultClient client, JsonWebKey verifyKey, string algorithm, byte[] digest, byte[] signature )
         {
             bool result = false;
@@ -294,6 +306,14 @@ namespace Microsoft.Azure.KeyVault
             return result;
         }
 
+        /// <summary>
+        /// Verifies a signature using the specified key
+        /// </summary>        
+        /// <param name="rsaParameters">The verification key</param>
+        /// <param name="algorithm">The signing algorithm</param>
+        /// <param name="digest">The digest hash value</param>
+        /// <param name="signature">The signature to verify</param>
+        /// <returns>true if verification succeeds, false if verification fails</returns>
         public static async Task<bool> VerifyAsync( this KeyVaultClient client, RSAParameters rsaParameters, string algorithm, byte[] digest, byte[] signature )
         {
             if ( string.IsNullOrWhiteSpace( algorithm ) )
@@ -372,8 +392,7 @@ namespace Microsoft.Azure.KeyVault
 
         /// <summary>
         /// Wraps a symmetric key using the specified wrapping key and algorithm.
-        /// </summary>
-        /// <param name="client">The KMSClient instance</param>
+        /// </summary>        
         /// <param name="wrappingKey">The wrapping key</param>
         /// <param name="key">The key to wrap</param>
         /// <param name="algorithm">The algorithm to use</param>
@@ -388,8 +407,7 @@ namespace Microsoft.Azure.KeyVault
 
         /// <summary>
         /// Wraps a symmetric key using the specified wrapping key and algorithm.
-        /// </summary>
-        /// <param name="client">The KMSClient instance</param>
+        /// </summary>        
         /// <param name="wrappingKey">The wrapping key</param>
         /// <param name="key">The key to wrap</param>
         /// <param name="algorithm">The algorithm to use</param>
@@ -432,11 +450,10 @@ namespace Microsoft.Azure.KeyVault
 #pragma warning disable 1998
         /// <summary>
         /// Wraps a symmetric key using the specified wrapping key and algorithm.
-        /// </summary>
-        /// <param name="client">The KMSClient instance</param>
+        /// </summary>        
         /// <param name="wrappingKey">The wrapping key</param>
         /// <param name="key">The key to wrap</param>
-        /// <param name="algorithm">The algorithm to use</param>
+        /// <param name="useOAEP">false for RSA1_5, true for RSA_OAEP</param>
         /// <returns>The wrapped key</returns>
         private static async Task<byte[]> WrapKeyAsync( this KeyVaultClient client, RSACryptoServiceProvider wrappingKey, byte[] key, bool useOAEP = true )
         {
