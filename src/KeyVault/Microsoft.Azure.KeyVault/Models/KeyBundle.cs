@@ -32,11 +32,22 @@ namespace Microsoft.Azure.KeyVault
         internal const string Property_Attributes = "attributes";
         internal const string Property_Tags = "tags";
 
+        private KeyIdentifier _identifier;
+
+        public KeyIdentifier Identifier
+        {
+            get
+            {
+                if (_identifier == null && Key != null && !string.IsNullOrWhiteSpace(Key.Kid))
+                    _identifier = new KeyIdentifier(Key.Kid);
+                return _identifier;
+            }
+        }
 
         /// <summary>
         /// The Json web key 
-        /// </summary>
-        [DataMember( Name = Property_Key )]
+        /// </summary>        
+        [DataMember(Name = Property_Key)]
         public JsonWebKey Key { get; set; }
 
         /// <summary>

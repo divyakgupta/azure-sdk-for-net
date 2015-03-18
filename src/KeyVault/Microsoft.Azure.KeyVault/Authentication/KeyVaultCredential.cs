@@ -37,7 +37,7 @@ namespace Microsoft.Azure.KeyVault
             OnAuthenticate = authenticationCallback;
         }
 
-        private string PreAuthenticate(Uri url)
+        private async Task<string> PreAuthenticate(Uri url)
         {
             if (OnAuthenticate != null)
             {
@@ -45,14 +45,14 @@ namespace Microsoft.Azure.KeyVault
 
                 if (challenge != null)
                 {
-                    return OnAuthenticate(challenge.AuthorizationServer, challenge.Resource, challenge.Scope);
+                    return await OnAuthenticate(challenge.AuthorizationServer, challenge.Resource, challenge.Scope).ConfigureAwait(false);
                 }
             }
 
             return null;
         }
 
-        protected string PostAuthenticate(HttpResponseMessage response)
+        protected async Task<string> PostAuthenticate(HttpResponseMessage response)
         {
             // An HTTP 401 Not Authorized error; handle if an authentication callback has been supplied
             if (OnAuthenticate != null)
@@ -70,7 +70,7 @@ namespace Microsoft.Azure.KeyVault
                         HttpBearerChallengeCache.GetInstance().SetChallengeForURL(response.RequestMessage.RequestUri, challenge);
 
                         // We have an authentication challenge, use it to get a new authorization token
-                        return OnAuthenticate(challenge.AuthorizationServer, challenge.Resource, challenge.Scope);
+                        return await OnAuthenticate(challenge.AuthorizationServer, challenge.Resource, challenge.Scope).ConfigureAwait(false);
                     }
                 }
             }
@@ -85,7 +85,7 @@ namespace Microsoft.Azure.KeyVault
                 throw new ArgumentNullException("request");
             }
 
-            var accessToken = PreAuthenticate(request.RequestUri);
+            var accessToken = await PreAuthenticate(request.RequestUri).ConfigureAwait(false);
             if (!string.IsNullOrEmpty(accessToken))
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             else
@@ -99,7 +99,7 @@ namespace Microsoft.Azure.KeyVault
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    accessToken = PostAuthenticate(response);
+                    accessToken = await PostAuthenticate(response).ConfigureAwait(false);
 
                     if (!string.IsNullOrEmpty(accessToken))
                     {

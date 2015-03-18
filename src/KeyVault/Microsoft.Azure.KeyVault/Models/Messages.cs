@@ -129,11 +129,34 @@ namespace Microsoft.Azure.KeyVault
         public Dictionary<string, string> Tags { get; set; }
     }
 
-    [JsonObject]
+    [JsonObject(MemberSerialization.OptIn)]
     public class KeyItem
-    {
-        [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Kid, Required = Required.Always )]
-        public string Kid { get; set; }
+    {        
+        private KeyIdentifier _identifier;
+        public KeyIdentifier Identifier
+        {
+            get
+            {
+                return _identifier;
+            }
+        }
+
+        private string _kid;
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore,
+            PropertyName = MessagePropertyNames.Kid, Required = Required.Always)]
+        public string Kid
+        {
+            get
+            {
+                return _kid;
+            }
+
+            set
+            {
+                _kid = value;
+                _identifier = !string.IsNullOrWhiteSpace(value) ? new KeyIdentifier(value) : null;
+            }
+        }
 
         [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Attributes, Required = Required.Always )]
         public KeyAttributes Attributes { get; set; }
@@ -196,12 +219,35 @@ namespace Microsoft.Azure.KeyVault
         public byte[] Value { get; set; }
     }
 
-    [JsonObject]
+    [JsonObject(MemberSerialization.OptIn)]
     public class KeyOpResponseMessage
-    {     
+    {
 
-        [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Kid, Required = Required.Always )]
-        public string Kid { get; set; }
+        private KeyIdentifier _identifier;
+        public KeyIdentifier Identifier
+        {
+            get
+            {
+                return _identifier;
+            }
+        }
+
+        private string _kid;
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore,
+            PropertyName = MessagePropertyNames.Kid, Required = Required.Always)]
+        public string Kid
+        {
+            get
+            {
+                return _kid;
+            }
+
+            set
+            {
+                _kid = value;
+                _identifier = new KeyIdentifier(value);
+            }
+        }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Value, Required = Required.Default)]
         [JsonConverter(typeof(Base64UrlConverter))]
@@ -258,17 +304,43 @@ namespace Microsoft.Azure.KeyVault
 
     #region Secret Messages    
 
-    [JsonObject]
+    [JsonObject(MemberSerialization.OptIn)]
     public class SecretItem
     {
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Id, Required = Required.Always)]
-        public string Id { get; set; }
+        private SecretIdentifier _identifier;
+        public SecretIdentifier Identifier
+        {
+            get
+            {
+                return _identifier;
+            }
+        }
 
+        private string _id;
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore,
+            PropertyName = MessagePropertyNames.Id, Required = Required.Always)]
+        public string Id
+        {
+            get
+            {
+                return _id;
+            }
+
+            set
+            {
+                _id = value;
+                _identifier = !string.IsNullOrWhiteSpace(value) ? new SecretIdentifier(value) : null;          
+            }
+        }
+        
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Attributes, Required = Required.Always)]
         public SecretAttributes Attributes { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Tags, Required = Required.Default)]
         public Dictionary<string, string> Tags { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.ContentType, Required = Required.Default)]
+        public string ContentType { get; set; }
     }
 
     [JsonObject]

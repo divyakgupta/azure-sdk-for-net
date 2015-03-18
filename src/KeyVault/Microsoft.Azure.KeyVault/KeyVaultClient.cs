@@ -42,7 +42,7 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="resource"> resource URL </param>
         /// <param name="scope"> scope </param>
         /// <returns> access token </returns>
-        public delegate string AuthenticationCallback(string authority, string resource, string scope);
+        public delegate Task<string> AuthenticationCallback(string authority, string resource, string scope);
 
         private readonly KeyVaultInternalClient _internalClient;
 
@@ -92,8 +92,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="keyVersion">The version of the key (optional)</param>
         /// <param name="algorithm">The algorithm</param>
         /// <param name="plainText">The plain text</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>The encrypted text</returns>
-        public async Task<KeyOperationResult> EncryptDataAsync(string vault, string keyName, string keyVersion, string algorithm, byte[] plainText)
+        public async Task<KeyOperationResult> EncryptAsync(string vault, string keyName, string keyVersion, string algorithm, byte[] plainText, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -109,10 +110,11 @@ namespace Microsoft.Azure.KeyVault
 
             var identifier = new KeyIdentifier(vault, keyName, keyVersion);
 
-            return await EncryptDataAsync(
+            return await EncryptAsync(
                 identifier.Identifier,
                 algorithm,
-                plainText).ConfigureAwait(false);
+                plainText, 
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -122,8 +124,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="keyIdentifier">The full key identifier</param>
         /// <param name="algorithm">The algorithm</param>
         /// <param name="plainText">The plain text</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>The encrypted text</returns>
-        public async Task<KeyOperationResult> EncryptDataAsync(string keyIdentifier, string algorithm, byte[] plainText)
+        public async Task<KeyOperationResult> EncryptAsync(string keyIdentifier, string algorithm, byte[] plainText, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(keyIdentifier))
                 throw new ArgumentNullException("keyIdentifier");
@@ -139,7 +142,7 @@ namespace Microsoft.Azure.KeyVault
                 var response = await _internalClient.Keys.EncryptDataAsync(
                     keyIdentifier,
                     CreateKeyOpRequest(algorithm, plainText),
-                    CancellationToken.None).ConfigureAwait(false);
+                    cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
 
@@ -152,8 +155,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="keyIdentifier">The full key identifier</param>
         /// <param name="algorithm">The algorithm</param>
         /// <param name="cipherText">The cipher text</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>The decryption result</returns>
-        public async Task<KeyOperationResult> DecryptDataAsync(string keyIdentifier, string algorithm, byte[] cipherText)
+        public async Task<KeyOperationResult> DecryptAsync(string keyIdentifier, string algorithm, byte[] cipherText, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(keyIdentifier))
                 throw new ArgumentNullException("keyIdentifier");
@@ -169,7 +173,7 @@ namespace Microsoft.Azure.KeyVault
                 var response = await _internalClient.Keys.DecryptDataAsync(
                         keyIdentifier,
                         CreateKeyOpRequest(algorithm, cipherText),
-                        CancellationToken.None).ConfigureAwait(false);
+                        cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
 
@@ -184,8 +188,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="keyVersion">The version of the key (optional)</param>
         /// <param name="algorithm">The signing algorithm </param>
         /// <param name="digest">The digest value to sign</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>The signature value</returns>
-        public async Task<KeyOperationResult> SignAsync(string vault, string keyName, string keyVersion, string algorithm, byte[] digest)
+        public async Task<KeyOperationResult> SignAsync(string vault, string keyName, string keyVersion, string algorithm, byte[] digest, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -204,7 +209,8 @@ namespace Microsoft.Azure.KeyVault
             return await SignAsync(
                 identifier.Identifier,
                 algorithm,
-                digest).ConfigureAwait(false);
+                digest,
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -213,8 +219,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="keyIdentifier"> The global key identifier of the signing key </param>
         /// <param name="algorithm">The signing algorithm </param>
         /// <param name="digest">The digest value to sign</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>The signature value</returns>
-        public async Task<KeyOperationResult> SignAsync(string keyIdentifier, string algorithm, byte[] digest)
+        public async Task<KeyOperationResult> SignAsync(string keyIdentifier, string algorithm, byte[] digest, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(keyIdentifier))
                 throw new ArgumentNullException("keyIdentifier");
@@ -230,7 +237,7 @@ namespace Microsoft.Azure.KeyVault
                 var response = await _internalClient.Keys.SignAsync(
                     keyIdentifier,
                     CreateKeyOpRequest(algorithm, digest),
-                    CancellationToken.None).ConfigureAwait(false);
+                    cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
 
@@ -244,8 +251,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="algorithm"> The signing/verification algorithm </param>
         /// <param name="digest"> The digest used for signing </param>
         /// <param name="signature"> The signature to be verified </param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns> true if the signature is verified, false otherwise. </returns>
-        public async Task<bool> VerifyAsync(string keyIdentifier, string algorithm, byte[] digest, byte[] signature)
+        public async Task<bool> VerifyAsync(string keyIdentifier, string algorithm, byte[] digest, byte[] signature, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(keyIdentifier))
                 throw new ArgumentNullException("keyIdentifier");
@@ -264,7 +272,7 @@ namespace Microsoft.Azure.KeyVault
                 var response = await _internalClient.Keys.VerifyAsync(
                     keyIdentifier,
                     CreateVerifyRequest(algorithm, digest, signature),
-                    CancellationToken.None).ConfigureAwait(false);
+                    cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<VerifyResponseMessage>(response.KeyOpResponse).Value;
 
@@ -279,8 +287,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="keyVersion">The version of the key (optional)</param>
         /// <param name="algorithm">The signing algorithm </param>
         /// <param name="key"> The symmetric key </param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns> The wrapped symmetric key </returns>
-        public async Task<KeyOperationResult> WrapKeyAsync(string vault, string keyName, string keyVersion, string algorithm, byte[] key)
+        public async Task<KeyOperationResult> WrapKeyAsync(string vault, string keyName, string keyVersion, string algorithm, byte[] key, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -299,7 +308,8 @@ namespace Microsoft.Azure.KeyVault
             return await WrapKeyAsync(
                 identifier.Identifier,
                 algorithm,
-                key).ConfigureAwait(false);
+                key,
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -308,8 +318,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="keyIdentifier"> The global key identifier of the key used for wrapping </param>
         /// <param name="algorithm"> The wrap algorithm </param>
         /// <param name="key"> The symmetric key </param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns> The wrapped symmetric key </returns>
-        public async Task<KeyOperationResult> WrapKeyAsync(string keyIdentifier, string algorithm, byte[] key)
+        public async Task<KeyOperationResult> WrapKeyAsync(string keyIdentifier, string algorithm, byte[] key, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(keyIdentifier))
                 throw new ArgumentNullException("keyIdentifier");
@@ -326,7 +337,7 @@ namespace Microsoft.Azure.KeyVault
                 var response = await _internalClient.Keys.WrapKeyAsync(
                     keyIdentifier,
                     CreateKeyOpRequest(algorithm, key),
-                    CancellationToken.None).ConfigureAwait(false);
+                    cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
 
@@ -340,8 +351,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="keyIdentifier"> The global key identifier of the wrapping/unwrapping key </param>
         /// <param name="algorithm">The unwrap algorithm</param>
         /// <param name="wrappedKey">The wrapped symmetric key</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>The unwrapped symmetric key</returns>
-        public async Task<KeyOperationResult> UnwrapKeyAsync(string keyIdentifier, string algorithm, byte[] wrappedKey)
+        public async Task<KeyOperationResult> UnwrapKeyAsync(string keyIdentifier, string algorithm, byte[] wrappedKey, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(keyIdentifier))
                 throw new ArgumentNullException("keyIdentifier");
@@ -358,7 +370,7 @@ namespace Microsoft.Azure.KeyVault
                 var response = await _internalClient.Keys.UnwrapKeyAsync(
                     keyIdentifier,
                     CreateKeyOpRequest(algorithm, wrappedKey),
-                    CancellationToken.None).ConfigureAwait(false);
+                    cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<KeyOperationResult>(response.KeyOpResponse);
 
@@ -379,8 +391,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="keySize">Size of the key</param>
         /// <param name="key_ops">JSON web key operations</param>        
         /// <param name="tags">Application-specific metadata in the form of key-value pairs</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A key bundle containing the result of the create request</returns>
-        public async Task<KeyBundle> CreateKeyAsync(string vault, string keyName, string keyType, int? keySize = null, string[] key_ops = null, KeyAttributes keyAttributes = null, Dictionary<string, string> tags = null)
+        public async Task<KeyBundle> CreateKeyAsync(string vault, string keyName, string keyType, int? keySize = null, string[] key_ops = null, KeyAttributes keyAttributes = null, Dictionary<string, string> tags = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -403,7 +416,7 @@ namespace Microsoft.Azure.KeyVault
                     vault,
                     keyName,
                     CreateKeyRequest(keyType, keySize, key_ops, keyAttributes, tags),
-                    CancellationToken.None).ConfigureAwait(false);
+                    cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
 
@@ -416,8 +429,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="vault">The vault name, e.g. https://myvault.vault.azure.net</param>
         /// <param name="keyName">The key name</param>
         /// <param name="keyVersion">The key version</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A KeyBundle of the key and its attributes</returns>
-        public async Task<KeyBundle> GetKeyAsync(string vault, string keyName, string keyVersion = null)
+        public async Task<KeyBundle> GetKeyAsync(string vault, string keyName, string keyVersion = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -427,22 +441,23 @@ namespace Microsoft.Azure.KeyVault
 
             var keyIdentifier = new KeyIdentifier(vault, keyName, keyVersion);
 
-            return await GetKeyAsync(keyIdentifier.Identifier).ConfigureAwait(false);
+            return await GetKeyAsync(keyIdentifier.Identifier, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Retrieves the public portion of a key plus its attributes
         /// </summary>
         /// <param name="keyIdentifier">The key identifier</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A KeyBundle of the key and its attributes</returns>
-        public async Task<KeyBundle> GetKeyAsync(string keyIdentifier)
+        public async Task<KeyBundle> GetKeyAsync(string keyIdentifier, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(keyIdentifier))
                 throw new ArgumentNullException("keyIdentifier");
 
             return await Do(async () =>
             {
-                var response = await _internalClient.Keys.GetAsync(keyIdentifier, CancellationToken.None).ConfigureAwait(false);
+                var response = await _internalClient.Keys.GetAsync(keyIdentifier, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
 
@@ -454,15 +469,16 @@ namespace Microsoft.Azure.KeyVault
         /// </summary>
         /// <param name="vault">The URL for the vault containing the keys.</param>
         /// <param name="maxresults">Maximum number of keys to return</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A response message containing a list of keys in the vault along with a link to the next page of keys</returns>   
-        public async Task<ListKeysResponseMessage> GetKeysAsync(string vault, int? maxresults = null)
+        public async Task<ListKeysResponseMessage> GetKeysAsync(string vault, int? maxresults = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
 
             return await Do(async () =>
             {
-                var response = await _internalClient.Keys.ListAsync(vault, maxresults).ConfigureAwait(false);
+                var response = await _internalClient.Keys.ListAsync(vault, maxresults, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
 
@@ -473,15 +489,16 @@ namespace Microsoft.Azure.KeyVault
         /// List the next page of keys
         /// </summary>
         /// <param name="nextLink">nextLink value from a previous call to GetKeys or GetKeysNext</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns></returns>
-        public async Task<ListKeysResponseMessage> GetKeysNextAsync(string nextLink)
+        public async Task<ListKeysResponseMessage> GetKeysNextAsync(string nextLink, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(nextLink))
                 throw new ArgumentNullException("nextLink");
 
             return await Do(async () =>
             {
-                var response = await _internalClient.Keys.ListNextAsync(nextLink).ConfigureAwait(false);
+                var response = await _internalClient.Keys.ListNextAsync(nextLink, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
 
@@ -494,8 +511,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="vault">The URL for the vault containing the key</param>
         /// <param name="keyName">Name of the key</param>
         /// <param name="maxresults">Maximum number of keys to return</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A response message containing a list of keys along with a link to the next page of keys</returns>
-        public async Task<ListKeysResponseMessage> GetKeyVersionsAsync(string vault, string keyName, int? maxresults = null)
+        public async Task<ListKeysResponseMessage> GetKeyVersionsAsync(string vault, string keyName, int? maxresults = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -505,7 +523,7 @@ namespace Microsoft.Azure.KeyVault
 
             return await Do(async () =>
             {
-                var response = await _internalClient.Keys.ListVersionsAsync(vault, keyName, maxresults).ConfigureAwait(false);
+                var response = await _internalClient.Keys.ListVersionsAsync(vault, keyName, maxresults, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
 
@@ -516,15 +534,16 @@ namespace Microsoft.Azure.KeyVault
         /// List the next page of key version
         /// </summary>
         /// <param name="nextLink">nextLink value from a previous call to GetKeyVersions or GetKeyVersionsNext</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A response message containing a list of keys along with a link to the next page of keys</returns>
-        public async Task<ListKeysResponseMessage> GetKeyVersionsNextAsync(string nextLink)
+        public async Task<ListKeysResponseMessage> GetKeyVersionsNextAsync(string nextLink, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(nextLink))
                 throw new ArgumentNullException("nextLink");
 
             return await Do(async () =>
             {
-                var response = await _internalClient.Keys.ListVersionsNextAsync(nextLink).ConfigureAwait(false);
+                var response = await _internalClient.Keys.ListVersionsNextAsync(nextLink, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<ListKeysResponseMessage>(response.KeyOpResponse);
 
@@ -536,8 +555,9 @@ namespace Microsoft.Azure.KeyVault
         /// </summary>
         /// <param name="vault">The vault name, e.g. https://myvault.vault.azure.net</param>
         /// <param name="keyName">The key name</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>The public part of the deleted key</returns>
-        public async Task<KeyBundle> DeleteKeyAsync(string vault, string keyName)
+        public async Task<KeyBundle> DeleteKeyAsync(string vault, string keyName, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -547,7 +567,7 @@ namespace Microsoft.Azure.KeyVault
 
             return await Do(async () =>
             {
-                var response = await _internalClient.Keys.DeleteKeyAsync(vault, keyName, CancellationToken.None).ConfigureAwait(false);
+                var response = await _internalClient.Keys.DeleteKeyAsync(vault, keyName, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
 
@@ -563,7 +583,7 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="attributes">The new attributes for the key</param>
         /// <param name="tags">Application-specific metadata in the form of key-value pairs</param>
         /// <returns> The updated key </returns>
-        public async Task<KeyBundle> UpdateKeyAsync(string vault, string keyName, string[] keyOps = null, KeyAttributes attributes = null, Dictionary<string, string> tags = null)
+        public async Task<KeyBundle> UpdateKeyAsync(string vault, string keyName, string[] keyOps = null, KeyAttributes attributes = null, Dictionary<string, string> tags = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -573,7 +593,7 @@ namespace Microsoft.Azure.KeyVault
 
             var keyIdentifier = new KeyIdentifier(vault, keyName);
 
-            return await UpdateKeyAsync(keyIdentifier.Identifier, keyOps, attributes, tags).ConfigureAwait(false);
+            return await UpdateKeyAsync(keyIdentifier.Identifier, keyOps, attributes, tags, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -583,8 +603,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="keyOps">Json web key operations</param>
         /// <param name="attributes">The new attributes for the key</param>
         /// <param name="tags">Application-specific metadata in the form of key-value pairs</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns> The updated key </returns>
-        public async Task<KeyBundle> UpdateKeyAsync(string keyIdentifier, string[] keyOps = null, KeyAttributes attributes = null, Dictionary<string, string> tags = null)
+        public async Task<KeyBundle> UpdateKeyAsync(string keyIdentifier, string[] keyOps = null, KeyAttributes attributes = null, Dictionary<string, string> tags = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(keyIdentifier))
                 throw new ArgumentNullException("keyIdentifier");
@@ -594,7 +615,7 @@ namespace Microsoft.Azure.KeyVault
                 var response = await _internalClient.Keys.UpdateAsync(
                     keyIdentifier,
                     CreateUpdateKeyRequest(keyOps, attributes, tags),
-                    CancellationToken.None).ConfigureAwait(false);
+                    cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
 
@@ -608,8 +629,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="keyName">The key name</param>
         /// <param name="keyBundle"> Key bundle </param>
         /// <param name="importToHardware">Whether to import as a hardware key (HSM) or software key </param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns> Imported key bundle to the vault </returns>
-        public async Task<KeyBundle> ImportKeyAsync(string vault, string keyName, KeyBundle keyBundle, bool? importToHardware = null)
+        public async Task<KeyBundle> ImportKeyAsync(string vault, string keyName, KeyBundle keyBundle, bool? importToHardware = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -627,7 +649,7 @@ namespace Microsoft.Azure.KeyVault
                 var response = await _internalClient.Keys.ImportAsync(
                     keyIdentifier.Identifier,
                     CreateImportKeyRequest(importToHardware, keyBundle),
-                    CancellationToken.None).ConfigureAwait(false);
+                    cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
 
@@ -640,8 +662,9 @@ namespace Microsoft.Azure.KeyVault
         /// </summary>
         /// <param name="vault">The vault name, e.g. https://myvault.vault.azure.net</param>
         /// <param name="keyName">The key name</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>The backup blob containing the backed up key</returns>
-        public async Task<byte[]> BackupKeyAsync(string vault, string keyName)
+        public async Task<byte[]> BackupKeyAsync(string vault, string keyName, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -653,7 +676,7 @@ namespace Microsoft.Azure.KeyVault
             {
                 var keyIdentifier = new KeyIdentifier(vault, keyName);
 
-                var response = await _internalClient.Keys.BackupAsync(keyIdentifier.Identifier, CancellationToken.None).ConfigureAwait(false);
+                var response = await _internalClient.Keys.BackupAsync(keyIdentifier.Identifier, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<BackupKeyResponseMessage>(response.KeyOpResponse).Value;
 
@@ -665,8 +688,9 @@ namespace Microsoft.Azure.KeyVault
         /// </summary>
         /// <param name="vault">The vault name, e.g. https://myvault.vault.azure.net</param>
         /// <param name="keyBundleBackup"> the backup blob associated with a key bundle </param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns> Restored key bundle in the vault </returns>
-        public async Task<KeyBundle> RestoreKeyAsync(string vault, byte[] keyBundleBackup)
+        public async Task<KeyBundle> RestoreKeyAsync(string vault, byte[] keyBundleBackup, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -679,7 +703,7 @@ namespace Microsoft.Azure.KeyVault
                 var response = await _internalClient.Keys.RestoreAsync(
                     vault,
                     CreateRestoreKeyRequest(keyBundleBackup),
-                    CancellationToken.None).ConfigureAwait(false);
+                    cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<KeyBundle>(response.KeyOpResponse);
 
@@ -696,8 +720,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="vault">The URL for the vault containing the secrets.</param>
         /// <param name="secretName">The name the secret in the given vault.</param>
         /// <param name="secretVersion">The version of the secret (optional)</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A response message containing the secret</returns>
-        public async Task<Secret> GetSecretAsync(string vault, string secretName, string secretVersion = null)
+        public async Task<Secret> GetSecretAsync(string vault, string secretName, string secretVersion = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -707,22 +732,23 @@ namespace Microsoft.Azure.KeyVault
 
             var secretIdentifier = new SecretIdentifier(vault, secretName, secretVersion);
 
-            return await GetSecretAsync(secretIdentifier.Identifier).ConfigureAwait(false);
+            return await GetSecretAsync(secretIdentifier.Identifier, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Gets a secret.
         /// </summary>
         /// <param name="secretIdentifier">The URL for the secret.</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A response message containing the secret</returns>
-        public async Task<Secret> GetSecretAsync(string secretIdentifier)
+        public async Task<Secret> GetSecretAsync(string secretIdentifier, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(secretIdentifier))
                 throw new ArgumentNullException("secretIdentifier");
 
             return await Do(async () =>
             {
-                var response = await _internalClient.Secrets.GetAsync(secretIdentifier, CancellationToken.None).ConfigureAwait(false);
+                var response = await _internalClient.Secrets.GetAsync(secretIdentifier, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<Secret>(response.Response);
 
@@ -737,9 +763,10 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="value">The value of the secret.</param>        
         /// <param name="contentType">Type of the secret value</param>
         /// <param name="tags">Application-specific metadata in the form of key-value pairs</param>
-        /// <param name="secretAttributes">Attributes for the secret</param>      
+        /// <param name="secretAttributes">Attributes for the secret</param>     
+        /// <param name="cancellationToken">Optional cancellation token</param> 
         /// <returns>A response message containing the updated secret</returns>
-        public async Task<Secret> SetSecretAsync(string vault, string secretName, SecureString value, Dictionary<string, string> tags = null, string contentType = null, SecretAttributes secretAttributes = null)
+        public async Task<Secret> SetSecretAsync(string vault, string secretName, SecureString value, Dictionary<string, string> tags = null, string contentType = null, SecretAttributes secretAttributes = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -754,7 +781,7 @@ namespace Microsoft.Azure.KeyVault
                 var response = await _internalClient.Secrets.SetAsync(
                     secretIdentifier.BaseIdentifier,
                     CreateSecretRequest(value, tags, contentType, secretAttributes),
-                    CancellationToken.None).ConfigureAwait(false);
+                    cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<Secret>(response.Response);
 
@@ -768,9 +795,10 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="secretName">The name of the secret</param>
         /// <param name="contentType">Type of the secret value</param>
         /// <param name="tags">Application-specific metadata in the form of key-value pairs</param>
-        /// <param name="secretAttributes">Attributes for the secret</param>        
+        /// <param name="secretAttributes">Attributes for the secret</param>      
+        /// <param name="cancellationToken">Optional cancellation token</param>  
         /// <returns>A response message containing the updated secret</returns>
-        public async Task<Secret> UpdateSecretAsync(string vault, string secretName, string contentType = null, Dictionary<string, string> tags = null, SecretAttributes secretAttributes = null)
+        public async Task<Secret> UpdateSecretAsync(string vault, string secretName, string contentType = null, SecretAttributes secretAttributes = null, Dictionary<string, string> tags = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -780,7 +808,12 @@ namespace Microsoft.Azure.KeyVault
 
             var secretIdentifier = new SecretIdentifier(vault, secretName);
 
-            return await UpdateSecretAsync(secretIdentifier.Identifier, contentType, tags, secretAttributes).ConfigureAwait(false);
+            return await UpdateSecretAsync(
+                secretIdentifier.Identifier, 
+                contentType, 
+                secretAttributes, 
+                tags, 
+                cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -789,9 +822,10 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="secretIdentifier">The URL of the secret</param>
         /// <param name="contentType">Type of the secret value</param>
         /// <param name="tags">Application-specific metadata in the form of key-value pairs</param>
-        /// <param name="secretAttributes">Attributes for the secret</param>        
+        /// <param name="secretAttributes">Attributes for the secret</param>      
+        /// <param name="cancellationToken">Optional cancellation token</param>  
         /// <returns>A response message containing the updated secret</returns>
-        public async Task<Secret> UpdateSecretAsync(string secretIdentifier, string contentType = null, Dictionary<string, string> tags = null, SecretAttributes secretAttributes = null)
+        public async Task<Secret> UpdateSecretAsync(string secretIdentifier, string contentType = null, SecretAttributes secretAttributes = null, Dictionary<string, string> tags = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(secretIdentifier))
                 throw new ArgumentNullException("secretIdentifier");
@@ -800,8 +834,8 @@ namespace Microsoft.Azure.KeyVault
             {
                 var response = await _internalClient.Secrets.UpdateAsync(
                     secretIdentifier,
-                    CreateUpdateSecretRequest(contentType, tags, secretAttributes)
-                    ).ConfigureAwait(false);
+                    CreateUpdateSecretRequest(contentType, tags, secretAttributes),
+                    cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<Secret>(response.Response);
 
@@ -813,8 +847,9 @@ namespace Microsoft.Azure.KeyVault
         /// </summary>
         /// <param name="vault">The URL for the vault containing the secrets.</param>
         /// <param name="secretName">The name of the secret in the given vault.</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>The deleted secret</returns>
-        public async Task<Secret> DeleteSecretAsync(string vault, string secretName)
+        public async Task<Secret> DeleteSecretAsync(string vault, string secretName, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -826,7 +861,7 @@ namespace Microsoft.Azure.KeyVault
             {
                 var secretIdentifier = new SecretIdentifier(vault, secretName);
 
-                var response = await _internalClient.Secrets.DeleteAsync(secretIdentifier.BaseIdentifier, CancellationToken.None).ConfigureAwait(false);
+                var response = await _internalClient.Secrets.DeleteAsync(secretIdentifier.BaseIdentifier, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<Secret>(response.Response);
 
@@ -838,15 +873,16 @@ namespace Microsoft.Azure.KeyVault
         /// </summary>
         /// <param name="vault">The URL for the vault containing the secrets.</param>
         /// <param name="maxresults">Maximum number of secrets to return</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A response message containing a list of secrets in the vault along with a link to the next page of secrets</returns>              
-        public async Task<ListSecretsResponseMessage> GetSecretsAsync(string vault, int? maxresults = null)
+        public async Task<ListSecretsResponseMessage> GetSecretsAsync(string vault, int? maxresults = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
 
             return await Do(async () =>
             {
-                var response = await _internalClient.Secrets.ListAsync(vault, maxresults).ConfigureAwait(false);
+                var response = await _internalClient.Secrets.ListAsync(vault, maxresults, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<ListSecretsResponseMessage>(response.Response);
 
@@ -857,15 +893,16 @@ namespace Microsoft.Azure.KeyVault
         /// List the next page of secrets
         /// </summary>
         /// <param name="nextLink">nextLink value from a previous call to GetSecrets or GetSecretsNext</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A response message containing a list of secrets in the vault along with a link to the next page of secrets</returns>
-        public async Task<ListSecretsResponseMessage> GetSecretsNextAsync(string nextLink)
+        public async Task<ListSecretsResponseMessage> GetSecretsNextAsync(string nextLink, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(nextLink))
                 throw new ArgumentNullException("nextLink");
 
             return await Do(async () =>
             {
-                var response = await _internalClient.Secrets.ListNextAsync(nextLink).ConfigureAwait(false);
+                var response = await _internalClient.Secrets.ListNextAsync(nextLink, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<ListSecretsResponseMessage>(response.Response);
 
@@ -878,8 +915,9 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="vault">The URL for the vault containing the secret</param>
         /// <param name="secretName">The name of the secret</param>
         /// <param name="maxresults">Maximum number of secrets to return</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A response message containing a list of secrets along with a link to the next page of secrets</returns>
-        public async Task<ListSecretsResponseMessage> GetSecretVersionsAsync(string vault, string secretName, int? maxresults = null)
+        public async Task<ListSecretsResponseMessage> GetSecretVersionsAsync(string vault, string secretName, int? maxresults = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -889,7 +927,7 @@ namespace Microsoft.Azure.KeyVault
 
             return await Do(async () =>
             {
-                var response = await _internalClient.Secrets.ListVersionsAsync(vault, secretName, maxresults).ConfigureAwait(false);
+                var response = await _internalClient.Secrets.ListVersionsAsync(vault, secretName, maxresults, cancellationToken).ConfigureAwait(false);
 
                 return JsonConvert.DeserializeObject<ListSecretsResponseMessage>(response.Response);
 
@@ -900,15 +938,16 @@ namespace Microsoft.Azure.KeyVault
         /// List the next page of versions of a secret
         /// </summary>
         /// <param name="nextLink">nextLink value from a previous call to GetSecretVersions or GetSecretVersionsNext</param>
+        /// <param name="cancellationToken">Optional cancellation token</param>
         /// <returns>A response message containing a list of secrets in the vault along with a link to the next page of secrets</returns>
-        public async Task<ListSecretsResponseMessage> GetSecretVersionsNextAsync(string nextLink)
+        public async Task<ListSecretsResponseMessage> GetSecretVersionsNextAsync(string nextLink, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(nextLink))
                 throw new ArgumentNullException("nextLink");
 
             return await Do(async () =>
             {
-                var response = await _internalClient.Secrets.ListVersionsNextAsync(nextLink);
+                var response = await _internalClient.Secrets.ListVersionsNextAsync(nextLink, cancellationToken);
 
                 return JsonConvert.DeserializeObject<ListSecretsResponseMessage>(response.Response);
             });

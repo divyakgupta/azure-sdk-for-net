@@ -48,8 +48,19 @@ namespace Microsoft.Azure.KeyVault
         /// <summary>
         /// The secret id
         /// </summary>
+        private string _id;
+
         [DataMember(Name = Property_Id, IsRequired = false, EmitDefaultValue = false)]
-        public string Id { get; set; }
+        public string Id
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                if (!string.IsNullOrWhiteSpace(_id))
+                    _identifier = new SecretIdentifier(_id);
+            }
+        }
 
         /// <summary>
         /// The secret management attributes
@@ -62,6 +73,18 @@ namespace Microsoft.Azure.KeyVault
         /// </summary>
         [DataMember(Name = Property_Tags, IsRequired = false, EmitDefaultValue = false)]
         public Dictionary<string, string> Tags { get; set; }
+
+        /// <summary>
+        /// Identifier of the secret 
+        /// </summary>
+        private SecretIdentifier _identifier;
+        public SecretIdentifier Identifier
+        {
+            get
+            {
+                return _identifier;
+            }
+        }
 
         /// <summary>
         /// Default constructor

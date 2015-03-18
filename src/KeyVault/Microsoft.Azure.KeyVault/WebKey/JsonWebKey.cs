@@ -156,7 +156,7 @@ namespace Microsoft.Azure.KeyVault.WebKey
         /// <summary>
         /// Converts a RSAParameters object to a WebKey of type RSA.
         /// </summary>
-        /// <param name="rsaProvider">The RSA object to convert</param>
+        /// <param name="rsaParameters">The RSA parameters object to convert</param>
         /// <returns>A WebKey representing the RSA object</returns>
         public JsonWebKey( RSAParameters rsaParameters )
         {
@@ -413,8 +413,7 @@ namespace Microsoft.Azure.KeyVault.WebKey
 
         /// <summary>
         /// Converts a WebKey of type Octet to an AES object.
-        /// </summary>
-        /// <param name="key">The WebKey to convert</param>
+        /// </summary>        
         /// <returns>An AES object</returns>
         public Aes ToAes()
         {

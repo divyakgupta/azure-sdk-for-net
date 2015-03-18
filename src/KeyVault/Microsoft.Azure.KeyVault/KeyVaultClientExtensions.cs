@@ -55,7 +55,7 @@ namespace Microsoft.Azure.KeyVault
             if ( key == null )
                 throw new ArgumentNullException( "key" );
 
-            return await client.DecryptDataAsync( key.Kid, algorithm, cipherText ).ConfigureAwait( false );
+            return await client.DecryptAsync( key.Kid, algorithm, cipherText ).ConfigureAwait( false );
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Microsoft.Azure.KeyVault
                     break;
 
                 default:
-                    result = await client.EncryptDataAsync( key.Kid, algorithm, plaintext ).ConfigureAwait( false );
+                    result = await client.EncryptAsync( key.Kid, algorithm, plaintext ).ConfigureAwait( false );
                     break;
             }
 
@@ -183,8 +183,8 @@ namespace Microsoft.Azure.KeyVault
                 Attributes = new KeyAttributes
                 {
                     Enabled   = true,
-                    Expires   = certificate.NotAfter.ToUniversalTime().ToUnixTime(),
-                    NotBefore = certificate.NotBefore.ToUniversalTime().ToUnixTime(),
+                    Expires   = certificate.NotAfter.ToUniversalTime(),
+                    NotBefore = certificate.NotBefore.ToUniversalTime(),
                 },
             };
 
