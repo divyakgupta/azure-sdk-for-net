@@ -37,15 +37,15 @@ namespace Microsoft.Azure.Management.KeyVault
             set { this._objectId = value; }
         }
         
-        private string _permissions;
+        private string _permissionsRawJsonString;
         
         /// <summary>
         /// Optional.
         /// </summary>
-        public string Permissions
+        public string PermissionsRawJsonString
         {
-            get { return this._permissions; }
-            set { this._permissions = value; }
+            get { return this._permissionsRawJsonString; }
+            set { this._permissionsRawJsonString = value; }
         }
         
         private Guid _tenantId;

@@ -18,7 +18,6 @@
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Security.Cryptography;
 using Microsoft.Azure.KeyVault.WebKey.Json;
 using Newtonsoft.Json;
 
@@ -38,7 +37,7 @@ namespace Microsoft.Azure.KeyVault.WebKey
         internal const string Property_DP = "dp";
         internal const string Property_DQ = "dq";
         internal const string Property_E  = "e";
-        internal const string Property_IQ = "iq";
+        internal const string Property_QI = "qi";
         internal const string Property_N  = "n";
         internal const string Property_P  = "p";
         internal const string Property_Q  = "q";
@@ -95,9 +94,9 @@ namespace Microsoft.Azure.KeyVault.WebKey
         [JsonConverter( typeof( Base64UrlConverter ) )]
         public byte[] DQ { get; set; }
 
-        [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = Property_IQ, Required = Required.Default )]
+        [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = Property_QI, Required = Required.Default )]
         [JsonConverter( typeof( Base64UrlConverter ) )]
-        public byte[] IQ { get; set; }
+        public byte[] QI { get; set; }
 
         [JsonProperty( DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = Property_P, Required = Required.Default )]
         [JsonConverter( typeof( Base64UrlConverter ) )]
@@ -128,50 +127,7 @@ namespace Microsoft.Azure.KeyVault.WebKey
         {
             // Intentionally empty
         }
-
-        /// <summary>
-        /// Converts an AES object to a WebKey of type Octet
-        /// </summary>
-        /// <param name="aesProvider"></param>
-        /// <returns></returns>
-        public JsonWebKey( Aes aesProvider )
-        {
-            if ( aesProvider == null )
-                throw new ArgumentNullException( "aesProvider" );
-
-            Kty = JsonWebKeyType.Octet;
-            K   = aesProvider.Key;
-        }
-
-        /// <summary>
-        /// Converts a RSA object to a WebKey of type RSA.
-        /// </summary>
-        /// <param name="rsaProvider">The RSA object to convert</param>
-        /// <param name="includePrivateParameters">True to include the RSA private key parameters</param>
-        /// <returns>A WebKey representing the RSA object</returns>
-        public JsonWebKey( RSA rsaProvider, bool includePrivateParameters = false ) : this( rsaProvider.ExportParameters( includePrivateParameters ) )
-        {
-        }
-
-        /// <summary>
-        /// Converts a RSAParameters object to a WebKey of type RSA.
-        /// </summary>
-        /// <param name="rsaParameters">The RSA parameters object to convert</param>
-        /// <returns>A WebKey representing the RSA object</returns>
-        public JsonWebKey( RSAParameters rsaParameters )
-        {
-            Kty = JsonWebKeyType.Rsa;
-
-            E   = rsaParameters.Exponent;
-            N   = rsaParameters.Modulus;
-
-            D   = rsaParameters.D;
-            DP  = rsaParameters.DP;
-            DQ  = rsaParameters.DQ;
-            IQ  = rsaParameters.InverseQ;
-            P   = rsaParameters.P;
-            Q   = rsaParameters.Q;
-        }
+       
 
         public override bool Equals( object obj )
         {
@@ -261,7 +217,7 @@ namespace Microsoft.Azure.KeyVault.WebKey
                 case JsonWebKeyType.Rsa:
                 case JsonWebKeyType.RsaHsm:
                     // MAY have private key parameters, but only ALL or NONE
-                    var privateParameters = new bool[] { D != null, DP != null, DQ != null, IQ != null, P != null, Q != null };
+                    var privateParameters = new bool[] { D != null, DP != null, DQ != null, QI != null, P != null, Q != null };
 
                     return privateParameters.All( ( value ) => value );
 
@@ -298,7 +254,7 @@ namespace Microsoft.Azure.KeyVault.WebKey
                 if ( !DQ.SequenceEqual( other.DQ ) )
                     return false;
 
-                if ( !IQ.SequenceEqual( other.IQ ) )
+                if ( !QI.SequenceEqual( other.QI ) )
                     return false;
 
                 if ( !P.SequenceEqual( other.P ) )
@@ -374,7 +330,7 @@ namespace Microsoft.Azure.KeyVault.WebKey
                 return false;
 
             // MAY have private key parameters, but only ALL or NONE
-            var privateParameters = new bool[] { D != null, DP != null, DQ != null, IQ != null, P != null, Q != null };
+            var privateParameters = new bool[] { D != null, DP != null, DQ != null, QI != null, P != null, Q != null };
 
             if ( privateParameters.All( ( value ) => value ) || privateParameters.All( ( value ) => !value ) )
                 return true;
@@ -389,7 +345,7 @@ namespace Microsoft.Azure.KeyVault.WebKey
                 return false;
 
             // MUST NOT have private key parameters, but only ALL or NONE
-            var privateParameters = new bool[] { D != null, DP != null, DQ != null, IQ != null, P != null, Q != null };
+            var privateParameters = new bool[] { D != null, DP != null, DQ != null, QI != null, P != null, Q != null };
 
             if ( privateParameters.Any( ( value ) => value ) )
                 return false;
@@ -410,66 +366,7 @@ namespace Microsoft.Azure.KeyVault.WebKey
             if ( !IsValid() )
                 throw new JsonSerializationException( "JsonWebKey is not valid" );
         }
-
-        /// <summary>
-        /// Converts a WebKey of type Octet to an AES object.
-        /// </summary>        
-        /// <returns>An AES object</returns>
-        public Aes ToAes()
-        {
-            if ( !Kty.Equals( JsonWebKeyType.Octet ) )
-                throw new InvalidOperationException( "key is not an octet key" );
-
-            if ( K == null )
-                throw new InvalidOperationException( "key does not contain a value" );
-
-            Aes aesProvider = Aes.Create();
-
-            if ( aesProvider != null )
-                aesProvider.Key = K;
-
-            return aesProvider;
-        }
-
-        /// <summary>
-        /// Converts a WebKey of type RSA or RSAHSM to a RSA object
-        /// </summary>
-        /// <param name="includePrivateParameters">Determines whether private key material, if available, is included</param>
-        /// <returns>An initialized RSACryptoServiceProvider instance</returns>
-        public RSACryptoServiceProvider ToRSA( bool includePrivateParameters = false )
-        {
-            var rsaParameters = ToRSAParameters( includePrivateParameters );
-            var rsaProvider   = new RSACryptoServiceProvider();
-
-            rsaProvider.ImportParameters( rsaParameters );
-
-            return rsaProvider;
-        }
-
-        public RSAParameters ToRSAParameters( bool includePrivateParameters = false )
-        {
-            if ( !string.Equals( JsonWebKeyType.Rsa, Kty ) && !string.Equals( JsonWebKeyType.RsaHsm, Kty ) )
-                throw new ArgumentException( "webKey is not a RSA key" );
-
-            var result = new RSAParameters()
-            {
-                Modulus  = N,
-                Exponent = E,
-            };
-
-            if ( includePrivateParameters )
-            {
-                result.D        = D;
-                result.DP       = DP;
-                result.DQ       = DQ;
-                result.InverseQ = IQ;
-                result.P        = P;
-                result.Q        = Q;
-            };
-
-            return result;
-        }
-
+       
         public override string ToString()
         {
             return JsonConvert.SerializeObject( this );

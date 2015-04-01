@@ -17,10 +17,7 @@
 
 using System;
 using System.Globalization;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Microsoft.Azure.KeyVault.Cryptography;
 using Microsoft.Azure.KeyVault.WebKey;
 using Microsoft.Win32.SafeHandles;
 
@@ -95,101 +92,10 @@ namespace Microsoft.Azure.KeyVault
             if ( plaintext == null )
                 throw new ArgumentNullException( "plaintext" );
 
-            switch ( key.Kty )
-            {
-                case JsonWebKeyType.Rsa:
-                case JsonWebKeyType.RsaHsm:
-                    var provider = key.ToRSA();
-
-                    if ( provider == null || !typeof( RSACryptoServiceProvider ).IsInstanceOfType( provider ) )
-                        throw new InvalidOperationException( "JsonWebKey RSA provider type is not supported" );
-
-                    if ( algorithm != JsonWebKeyEncryptionAlgorithm.RSA15 && algorithm != JsonWebKeyEncryptionAlgorithm.RSAOAEP )
-                        throw new ArgumentException( "algorithm" );
-
-                    var cipher_text = await client.EncryptDataAsync( (RSACryptoServiceProvider)provider, plaintext, algorithm == JsonWebKeyEncryptionAlgorithm.RSAOAEP ).ConfigureAwait( false );
-
-                    result = new KeyOperationResult( ){ Kid = key.Kid, Result = cipher_text };
-                    break;
-
-                default:
-                    result = await client.EncryptAsync( key.Kid, algorithm, plaintext ).ConfigureAwait( false );
-                    break;
-            }
-
-            return result;
+            return await client.EncryptAsync( key.Kid, algorithm, plaintext ).ConfigureAwait( false );           
         }
         
-#pragma warning disable 1998
-        /// <summary>
-        /// Encrypts a single block of data. The amount of data that may be encrypted is determined
-        /// by the target key type and the encryption algorithm, e.g. RSA, RSA_OAEP
-        /// </summary>
-        /// <param name="encryptionKey">The encryption key</param>
-        /// <param name="data">The data to encrypt</param>
-        /// <param name="useOAEP">false for RSA1_5, true for RSA_OAEP</param>
-        /// <returns>The encrypted data</returns>
-        private static async Task<byte[]> EncryptDataAsync( this KeyVaultClient client, RSACryptoServiceProvider encryptionKey, byte[] data, bool useOAEP = true )
-        {
-            if ( encryptionKey == null )
-                throw new ArgumentNullException( "encryptionKey" );
-
-            if ( data == null )
-                throw new ArgumentNullException( "data" );
-
-            return encryptionKey.Encrypt( data, useOAEP );
-        }
-#pragma warning restore 1998
-
-        /// <summary>
-        /// Imports an X509 Certificate, including private key, to the specified vault.
-        /// </summary>        
-        /// <param name="vaultAddress">The vault address to import the key</param>
-        /// <param name="certificate">The certificate to import</param>
-        /// <returns></returns>
-        public static async Task<KeyBundle> ImportKeyAsync( this KeyVaultClient client, string vaultAddress, X509Certificate2 certificate, bool? importToHardware = null )
-        {
-            if ( certificate == null )
-                throw new ArgumentNullException( "certificate" );
-
-            return await ImportKeyAsync( client, vaultAddress, certificate.GetCertHashString(), certificate, importToHardware ).ConfigureAwait( false );
-        }
-
-        /// <summary>
-        /// Imports an X509 Certificate, including private key, to the specified vault.
-        /// </summary>        
-        /// <param name="vaultAddress">The vault address to import the key</param>
-        /// <param name="certificate">The certificate to import</param>
-        /// <returns></returns>
-        public static async Task<KeyBundle> ImportKeyAsync( this KeyVaultClient client, string vaultAddress, string keyName, X509Certificate2 certificate, bool? importToHardware = null )
-        {
-            if ( string.IsNullOrEmpty( vaultAddress ) )
-                throw new ArgumentNullException( "vaultAddress" );
-
-            if ( certificate == null )
-                throw new ArgumentNullException( "certificate" );
-
-            if ( !certificate.HasPrivateKey )
-                throw new ArgumentException( "Certificate does not have a private key" );
-
-            var key = certificate.PrivateKey as RSA;
-
-            if ( key == null )
-                throw new ArgumentException( string.Format( CultureInfo.CurrentCulture, "Certificate key uses unsupported algorithm {0}", certificate.GetKeyAlgorithm() ) );
-
-            var keyBundle = new KeyBundle
-            {
-                Key        = new JsonWebKey( key, true ),
-                Attributes = new KeyAttributes
-                {
-                    Enabled   = true,
-                    Expires   = certificate.NotAfter.ToUniversalTime(),
-                    NotBefore = certificate.NotBefore.ToUniversalTime(),
-                },
-            };
-
-            return await client.ImportKeyAsync( vaultAddress, keyName, keyBundle, importToHardware ).ConfigureAwait( false );
-        }
+       
 
         /// <summary>
         /// Creates a signature from a digest using the specified key in the vault 
@@ -289,88 +195,10 @@ namespace Microsoft.Azure.KeyVault
             if ( signature == null )
                 throw new ArgumentNullException( "signature" );
 
-            switch ( verifyKey.Kty )
-            {
-                case JsonWebKeyType.Rsa:
-                case JsonWebKeyType.RsaHsm:
-                    var rsaParameters = verifyKey.ToRSAParameters();
-
-                    result = await client.VerifyAsync( rsaParameters, algorithm, digest, signature ).ConfigureAwait( false );
-                    break;
-
-                default:
-                    result = await client.VerifyAsync( verifyKey.Kid, algorithm, digest, signature ).ConfigureAwait( false );
-                    break;
-            }
-
-            return result;
+            return await client.VerifyAsync( verifyKey.Kid, algorithm, digest, signature ).ConfigureAwait( false );
+                    
         }
-
-        /// <summary>
-        /// Verifies a signature using the specified key
-        /// </summary>        
-        /// <param name="rsaParameters">The verification key</param>
-        /// <param name="algorithm">The signing algorithm</param>
-        /// <param name="digest">The digest hash value</param>
-        /// <param name="signature">The signature to verify</param>
-        /// <returns>true if verification succeeds, false if verification fails</returns>
-        public static async Task<bool> VerifyAsync( this KeyVaultClient client, RSAParameters rsaParameters, string algorithm, byte[] digest, byte[] signature )
-        {
-            if ( string.IsNullOrWhiteSpace( algorithm ) )
-                throw new ArgumentNullException( "algorithm" );
-
-            if ( digest == null )
-                throw new ArgumentNullException( "digest" );
-
-            if ( signature == null )
-                throw new ArgumentNullException( "signature" );
-
-            var task = new Task<bool>( () =>
-            {
-                switch ( algorithm )
-                {
-                    case "RS256":
-                    case "RS384":
-                    case "RS512":
-                        using ( var localKey = new RSACryptoServiceProvider() )
-                        {
-                            localKey.ImportParameters( rsaParameters );
-                            return localKey.VerifyHash( digest, CryptoConfig.MapNameToOID( MapAlgToHashAlgorithm( algorithm ) ), signature );
-                        }
-
-                    case "RSSP1":
-                    case "RSNULL":
-                        {
-                            SafeNCryptProviderHandle hProvider;
-                            var errorCode = NativeMethods.NCryptOpenStorageProvider( out hProvider, "Microsoft Software Key Storage Provider", 0 );
-                            if ( errorCode != NativeMethods.Success )
-                                throw new CryptographicException( errorCode );
-
-                            var blob = NativeMethods.NewNCryptPublicBlob( rsaParameters );
-                            SafeNCryptKeyHandle hKey;
-                            errorCode = NativeMethods.NCryptImportKey( hProvider, IntPtr.Zero, "RSAPUBLICBLOB", null, out hKey, blob, blob.Length, 0 );
-                            if ( errorCode != NativeMethods.Success )
-                                throw new CryptographicException( errorCode );
-
-                            var pkcs1Info = new NativeMethods.NCRYPT_PKCS1_PADDING_INFO();
-                            pkcs1Info.pszAlgId = null;
-
-                            errorCode = NativeMethods.NCryptVerifySignature( hKey, ref pkcs1Info, digest, digest.Length, signature, signature.Length, NativeMethods.AsymmetricPaddingMode.Pkcs1 );
-                            if ( errorCode != NativeMethods.Success && errorCode != NativeMethods.BadSignature && errorCode != NativeMethods.InvalidParameter )
-                                throw new CryptographicException( errorCode );
-
-                            return ( errorCode == NativeMethods.Success );
-                        }
-
-                    default:
-                        throw new ArgumentException( "Invalid algorithm: " + algorithm );
-                }
-            } );
-
-            task.Start();
-            
-            return await task.ConfigureAwait( false );
-        }
+        
 
         private static string MapAlgToHashAlgorithm(string alg)
         {
@@ -422,49 +250,8 @@ namespace Microsoft.Azure.KeyVault
             if ( key == null )
                 throw new ArgumentNullException( "key" );
 
-            switch ( wrappingKey.Kty )
-            {
-                case JsonWebKeyType.Rsa:
-                case JsonWebKeyType.RsaHsm:
-                    var provider = wrappingKey.ToRSA();
-
-                    if ( provider == null || !typeof( RSACryptoServiceProvider ).IsInstanceOfType( provider ) )
-                        throw new InvalidOperationException( "JsonWebKey RSA provider type is not supported" );
-
-                    if ( algorithm != JsonWebKeyEncryptionAlgorithm.RSA15 && algorithm != JsonWebKeyEncryptionAlgorithm.RSAOAEP )
-                        throw new ArgumentException( "algorithm" );
-
-                    var encrypted_key = await client.WrapKeyAsync( (RSACryptoServiceProvider)provider, key, algorithm == JsonWebKeyEncryptionAlgorithm.RSAOAEP ).ConfigureAwait( false );
-
-                    result = new KeyOperationResult(){ Kid = wrappingKey.Kid, Result = encrypted_key };
-                    break;
-
-                default:
-                    result = await client.WrapKeyAsync( wrappingKey.Kid, algorithm, key ).ConfigureAwait( false );
-                    break;
-            }
-
-            return result;
+            return await client.WrapKeyAsync(wrappingKey.Kid, algorithm, key).ConfigureAwait(false);            
         }
 
-#pragma warning disable 1998
-        /// <summary>
-        /// Wraps a symmetric key using the specified wrapping key and algorithm.
-        /// </summary>        
-        /// <param name="wrappingKey">The wrapping key</param>
-        /// <param name="key">The key to wrap</param>
-        /// <param name="useOAEP">false for RSA1_5, true for RSA_OAEP</param>
-        /// <returns>The wrapped key</returns>
-        private static async Task<byte[]> WrapKeyAsync( this KeyVaultClient client, RSACryptoServiceProvider wrappingKey, byte[] key, bool useOAEP = true )
-        {
-            if ( wrappingKey == null )
-                throw new ArgumentNullException( "wrappingKey" );
-
-            if ( key == null )
-                throw new ArgumentNullException( "key" );
-
-            return wrappingKey.Encrypt( key, useOAEP );
-        }
-#pragma warning restore 1998
     }
 }

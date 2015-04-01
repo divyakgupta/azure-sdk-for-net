@@ -18,7 +18,6 @@
     <Compile Include="Authentication\HttpBearerChallenge.cs" />
     <Compile Include="Authentication\HttpBearerChallengeCache.cs" />
     <Compile Include="Authentication\KeyVaultCredential.cs" />
-    <Compile Include="Cryptography\NativeMethods.cs" />
     <Compile Include="Generated\**\*.cs" />
     <Compile Include="KeyVaultClient.cs" />
     <Compile Include="KeyVaultClientException.cs" />

@@ -216,9 +216,9 @@ namespace Microsoft.Azure.Management.KeyVault
                             
                             accessPolicyEntryValue["objectId"] = accessPoliciesItem.ObjectId.ToString();
                             
-                            if (accessPoliciesItem.Permissions != null)
+                            if (accessPoliciesItem.PermissionsRawJsonString != null)
                             {
-                                accessPolicyEntryValue["permissions"] = JObject.Parse(accessPoliciesItem.Permissions);
+                                accessPolicyEntryValue["permissions"] = JObject.Parse(accessPoliciesItem.PermissionsRawJsonString);
                             }
                         }
                         propertiesValue["accessPolicies"] = accessPoliciesArray;
@@ -357,7 +357,7 @@ namespace Microsoft.Azure.Management.KeyVault
                                         if (permissionsValue != null && permissionsValue.Type != JTokenType.Null)
                                         {
                                             string permissionsInstance = permissionsValue.ToString(Newtonsoft.Json.Formatting.Indented);
-                                            accessPolicyEntryInstance.Permissions = permissionsInstance;
+                                            accessPolicyEntryInstance.PermissionsRawJsonString = permissionsInstance;
                                         }
                                     }
                                 }
@@ -784,7 +784,7 @@ namespace Microsoft.Azure.Management.KeyVault
                                         if (permissionsValue != null && permissionsValue.Type != JTokenType.Null)
                                         {
                                             string permissionsInstance = permissionsValue.ToString(Newtonsoft.Json.Formatting.Indented);
-                                            accessPolicyEntryInstance.Permissions = permissionsInstance;
+                                            accessPolicyEntryInstance.PermissionsRawJsonString = permissionsInstance;
                                         }
                                     }
                                 }
@@ -1070,7 +1070,7 @@ namespace Microsoft.Azure.Management.KeyVault
                                                 if (permissionsValue != null && permissionsValue.Type != JTokenType.Null)
                                                 {
                                                     string permissionsInstance = permissionsValue.ToString(Newtonsoft.Json.Formatting.Indented);
-                                                    accessPolicyEntryInstance.Permissions = permissionsInstance;
+                                                    accessPolicyEntryInstance.PermissionsRawJsonString = permissionsInstance;
                                                 }
                                             }
                                         }
@@ -1330,7 +1330,7 @@ namespace Microsoft.Azure.Management.KeyVault
                                                 if (permissionsValue != null && permissionsValue.Type != JTokenType.Null)
                                                 {
                                                     string permissionsInstance = permissionsValue.ToString(Newtonsoft.Json.Formatting.Indented);
-                                                    accessPolicyEntryInstance.Permissions = permissionsInstance;
+                                                    accessPolicyEntryInstance.PermissionsRawJsonString = permissionsInstance;
                                                 }
                                             }
                                         }
