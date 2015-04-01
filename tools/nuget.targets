@@ -17,9 +17,7 @@
           Condition=" '$(Scope)' != 'Common' and '$(Scope)' != 'All' and '$(Scope)' != 'Authentication' " />
   <Import Project="$(LibrarySourceFolder)\KeyVault\*\*.nuget.proj"
          Condition=" '$(Scope)' == 'All' "/>		 
-  <Import Project="$([System.IO.Path]::GetDirectoryName($(Scope)))\*.nuget.proj" 
-          Condition=" '$(Scope)' != 'Services' and '$(Scope)' != 'Common' and '$(Scope)' != 'All' " />
-
+  
   <PropertyGroup>
     <NuGetVerbosity>normal</NuGetVerbosity>
     <PublishSymbolSourcePackages>true</PublishSymbolSourcePackages>
