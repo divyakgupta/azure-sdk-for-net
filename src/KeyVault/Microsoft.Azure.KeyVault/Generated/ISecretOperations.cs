@@ -30,7 +30,7 @@ namespace Microsoft.Azure.KeyVault.Internal
     /// <summary>
     /// Operations for secrets in a vault
     /// </summary>
-    public partial interface ISecretOperations
+    internal partial interface ISecretOperations
     {
         /// <summary>
         /// Delete the specified secret

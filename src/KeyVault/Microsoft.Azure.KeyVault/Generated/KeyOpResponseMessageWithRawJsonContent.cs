@@ -28,7 +28,7 @@ namespace Microsoft.Azure.KeyVault.Internal
     /// <summary>
     /// Represents the response to a key operation request.
     /// </summary>
-    public partial class KeyOpResponseMessageWithRawJsonContent : AzureOperationResponse
+    internal partial class KeyOpResponseMessageWithRawJsonContent : AzureOperationResponse
     {
         private string _keyOpResponse;
         

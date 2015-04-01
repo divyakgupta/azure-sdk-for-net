@@ -30,7 +30,7 @@ namespace Microsoft.Azure.KeyVault.Internal
     /// <summary>
     /// Cryptographic and management operations for keys in a vault
     /// </summary>
-    public partial interface IKeyOperations
+    internal partial interface IKeyOperations
     {
         /// <summary>
         /// Requests that a backup of the specified key be downloaded to the

@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace Microsoft.Azure.KeyVault.Internal
 {
-    public static partial class KeyVaultInternalClientExtensions
+    internal static partial class KeyVaultInternalClientExtensions
     {
     }
 }

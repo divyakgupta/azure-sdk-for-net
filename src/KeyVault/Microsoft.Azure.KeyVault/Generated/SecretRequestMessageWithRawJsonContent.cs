@@ -27,7 +27,7 @@ namespace Microsoft.Azure.KeyVault.Internal
     /// <summary>
     /// Represents a secret operation request.
     /// </summary>
-    public partial class SecretRequestMessageWithRawJsonContent
+    internal partial class SecretRequestMessageWithRawJsonContent
     {
         private string _rawJsonRequest;
         

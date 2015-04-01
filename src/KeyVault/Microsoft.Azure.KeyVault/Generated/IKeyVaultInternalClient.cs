@@ -25,7 +25,7 @@ using Microsoft.Azure.KeyVault.Internal;
 
 namespace Microsoft.Azure.KeyVault.Internal
 {
-    public partial interface IKeyVaultInternalClient : IDisposable
+    internal partial interface IKeyVaultInternalClient : IDisposable
     {
         /// <summary>
         /// Gets the API version.

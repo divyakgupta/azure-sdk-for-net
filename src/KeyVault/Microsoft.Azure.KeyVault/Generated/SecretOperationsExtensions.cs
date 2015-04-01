@@ -27,7 +27,7 @@ using Microsoft.Azure.KeyVault.Internal;
 
 namespace Microsoft.Azure.KeyVault.Internal
 {
-    public static partial class SecretOperationsExtensions
+    internal static partial class SecretOperationsExtensions
     {
         /// <summary>
         /// Delete the specified secret

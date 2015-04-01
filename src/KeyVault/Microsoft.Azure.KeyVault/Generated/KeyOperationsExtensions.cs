@@ -27,7 +27,7 @@ using Microsoft.Azure.KeyVault.Internal;
 
 namespace Microsoft.Azure.KeyVault.Internal
 {
-    public static partial class KeyOperationsExtensions
+    internal static partial class KeyOperationsExtensions
     {
         /// <summary>
         /// Requests that a backup of the specified key be downloaded to the

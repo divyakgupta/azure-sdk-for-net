@@ -27,7 +27,7 @@ using Microsoft.Azure.KeyVault.Internal;
 
 namespace Microsoft.Azure.KeyVault.Internal
 {
-    public partial class KeyVaultInternalClient : ServiceClient<KeyVaultInternalClient>, IKeyVaultInternalClient
+    internal partial class KeyVaultInternalClient : ServiceClient<KeyVaultInternalClient>, IKeyVaultInternalClient
     {
         private string _apiVersion;
         
