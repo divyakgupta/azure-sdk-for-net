@@ -58,7 +58,7 @@ namespace Microsoft.Azure.KeyVault
             {
                 _id = value;
                 if (!string.IsNullOrWhiteSpace(_id))
-                    _identifier = new SecretIdentifier(_id);
+                    SecretIdentifier = new SecretIdentifier(_id);
             }
         }
 
@@ -76,15 +76,8 @@ namespace Microsoft.Azure.KeyVault
 
         /// <summary>
         /// Identifier of the secret 
-        /// </summary>
-        private SecretIdentifier _identifier;
-        public SecretIdentifier Identifier
-        {
-            get
-            {
-                return _identifier;
-            }
-        }
+        /// </summary>        
+        public SecretIdentifier SecretIdentifier { get; private set; }
 
         /// <summary>
         /// Default constructor

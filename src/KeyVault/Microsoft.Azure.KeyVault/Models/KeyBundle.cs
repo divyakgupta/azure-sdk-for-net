@@ -31,16 +31,12 @@ namespace Microsoft.Azure.KeyVault
         internal const string Property_Key        = "key";
         internal const string Property_Attributes = "attributes";
         internal const string Property_Tags = "tags";
-
-        private KeyIdentifier _identifier;
-
-        public KeyIdentifier Identifier
+        
+        public KeyIdentifier KeyIdentifier
         {
             get
-            {
-                if (_identifier == null && Key != null && !string.IsNullOrWhiteSpace(Key.Kid))
-                    _identifier = new KeyIdentifier(Key.Kid);
-                return _identifier;
+            {                
+                return new KeyIdentifier(Key.Kid); 
             }
         }
 
