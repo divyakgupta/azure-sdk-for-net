@@ -31,7 +31,7 @@ namespace Microsoft.Azure.KeyVault
         {
             string authority = uri.Authority;
 
-            if (!authority.Contains(":"))
+            if (!authority.Contains(":") && uri.Port > 0)
             {
                 // Append port for complete authority
                 authority = string.Format("{0}:{1}", uri.Authority, uri.Port.ToString());

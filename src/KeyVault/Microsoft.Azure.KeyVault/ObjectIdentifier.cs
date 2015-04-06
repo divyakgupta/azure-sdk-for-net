@@ -22,6 +22,34 @@ namespace Microsoft.Azure.KeyVault
 {
     public class ObjectIdentifier
     {
+        protected static bool IsObjectIdentifier(string collection, string identifier)
+        {
+            if (string.IsNullOrEmpty(collection))
+                throw new ArgumentNullException("collection");
+
+            if (string.IsNullOrEmpty(identifier))
+                return false;
+
+            try
+            {
+                Uri baseUri = new Uri(identifier, UriKind.Absolute);
+
+                // We expect an identifier with either 3 or 4 segments: host + collection + name [+ version]
+                if (baseUri.Segments.Length != 3 && baseUri.Segments.Length != 4)
+                    return false;
+
+                if (!string.Equals(baseUri.Segments[1], collection + "/"))
+                    return false;
+
+                return true;
+            }
+            catch (UriFormatException)
+            {
+            }
+
+            return false;
+        }
+
         private readonly string _vault;
         private readonly string _vaultWithoutScheme;
         private readonly string _name;
@@ -64,10 +92,10 @@ namespace Microsoft.Azure.KeyVault
 
             // We expect and identifier with either 3 or 4 segments: host + collection + name [+ version]
             if (baseUri.Segments.Length != 3 && baseUri.Segments.Length != 4)
-                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Invalid SecretIdentifier URL: {0}. Bad number of segments: {1}", identifier, baseUri.Segments.Length));
+                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Invalid ObjectIdentifier: {0}. Bad number of segments: {1}", identifier, baseUri.Segments.Length));
 
             if (!string.Equals(baseUri.Segments[1], collection + "/"))
-                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Invalid SecretIdentifier URL: {0}. segment [1] should be '{1}/', found '{2}'", identifier, collection, baseUri.Segments[1]));
+                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, "Invalid ObjectIdentifier: {0}. segment [1] should be '{1}/', found '{2}'", identifier, collection, baseUri.Segments[1]));
 
             _name = baseUri.Segments[2].Substring(0, baseUri.Segments[2].Length).TrimEnd('/');
 
@@ -134,6 +162,11 @@ namespace Microsoft.Azure.KeyVault
 
     public sealed class KeyIdentifier : ObjectIdentifier
     {
+        public static bool IsKeyIdentifier(string identifier)
+        {
+            return ObjectIdentifier.IsObjectIdentifier("keys", identifier);
+        }
+
         public KeyIdentifier(string vault, string name, string version = null)
             : base(vault, "keys", name, version)
         {
@@ -147,6 +180,11 @@ namespace Microsoft.Azure.KeyVault
 
     public sealed class SecretIdentifier : ObjectIdentifier
     {
+        public static bool IsSecretIdentifier(string identifier)
+        {
+            return ObjectIdentifier.IsObjectIdentifier("secrets", identifier);
+        }
+
         public SecretIdentifier(string vault, string name, string version = null)
             : base(vault, "secrets", name, version)
         {

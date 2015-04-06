@@ -77,7 +77,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiManagementManagement", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyVault", "src\KeyVault\Microsoft.Azure.KeyVault\KeyVault.csproj", "{BEC7DBF7-A3B1-4088-BDFF-C1C2A0FD6F56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyVaultManagement", "src\KeyVault\Microsoft.Azure.Management.KeyVault\KeyVaultManagement.csproj", "{92ADE435-B835-447D-8B5B-1F4A52F8DF39}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyVaultManagement", "src\KeyVaultManagement\KeyVaultManagement.csproj", "{92ADE435-B835-447D-8B5B-1F4A52F8DF39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
