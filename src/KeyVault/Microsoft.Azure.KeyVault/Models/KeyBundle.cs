@@ -35,8 +35,11 @@ namespace Microsoft.Azure.KeyVault
         public KeyIdentifier KeyIdentifier
         {
             get
-            {                
-                return new KeyIdentifier(Key.Kid); 
+            {          
+                if (Key != null && !string.IsNullOrWhiteSpace(Key.Kid))
+                    return new KeyIdentifier(Key.Kid);
+                else                
+                    return null;                
             }
         }
 

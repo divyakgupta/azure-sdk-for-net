@@ -57,8 +57,7 @@ namespace Microsoft.Azure.KeyVault
             set
             {
                 _id = value;
-                if (!string.IsNullOrWhiteSpace(_id))
-                    SecretIdentifier = new SecretIdentifier(_id);
+                SecretIdentifier = !string.IsNullOrWhiteSpace(_id) ? new SecretIdentifier(_id) : null;
             }
         }
 
