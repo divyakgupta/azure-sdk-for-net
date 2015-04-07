@@ -28,7 +28,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="KeyVault\Microsoft.Azure.Management.KeyVault\**\*.cs" target="src" />
+    <file src="KeyVaultManagement\**\*.cs" target="src" />
     <file src="..\binaries\net45\Microsoft.Azure.Management.KeyVault.dll" target="lib\net45" />
     <file src="..\binaries\net45\Microsoft.Azure.Management.KeyVault.pdb" target="lib\net45" />
     <file src="..\binaries\net45\Microsoft.Azure.Management.KeyVault.xml" target="lib\net45" />
