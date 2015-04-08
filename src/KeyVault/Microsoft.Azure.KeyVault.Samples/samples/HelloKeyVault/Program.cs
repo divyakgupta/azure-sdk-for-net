@@ -52,6 +52,7 @@ namespace Sample.Microsoft.HelloKeyVault
             //ServicePointManager.ServerCertificateValidationCallback += ( sender, cert, chain, sslPolicyErrors ) => true;
 
             List<KeyOperationType> successfulOperations = new List<KeyOperationType>();
+            List<KeyOperationType> failedOperations = new List<KeyOperationType>();
 
             foreach (var operation in inputValidator.GetKeyOperations())
             {
@@ -122,13 +123,22 @@ namespace Sample.Microsoft.HelloKeyVault
                 {
                     // The Key Vault exceptions are logged but not thrown to avoid blocking execution for other commands running in batch
                     Console.Out.WriteLine("Operation failed: {0}", exception.Message);
+                    failedOperations.Add(operation);
                 }
 
             }
 
-            Console.Out.WriteLine("\n\n---------------Successfully completed these Key Vault operations:---------------");
+            Console.Out.WriteLine("\n\n---------------Successful Key Vault operations:---------------");
             foreach (KeyOperationType type in successfulOperations)
                 Console.Out.WriteLine("\t{0}", type);
+
+            if (failedOperations.Count > 0)
+            {
+                Console.Out.WriteLine("\n\n---------------Failed Key Vault operations:---------------");
+                foreach (KeyOperationType type in failedOperations)
+                    Console.Out.WriteLine("\t{0}", type);
+            }
+
             Console.Out.WriteLine();
             Console.Out.Write("Press enter to continue . . .");
             Console.In.Read();
@@ -290,7 +300,7 @@ namespace Sample.Microsoft.HelloKeyVault
 
             var contentType = inputValidator.GetSecretContentType();
 
-            var secret = keyVaultClient.SetSecretAsync(inputValidator.GetVaultAddress(), secretName, secretValue.ConvertToSecureString(), tags, contentType, inputValidator.GetSecretAttributes()).GetAwaiter().GetResult();
+            var secret = keyVaultClient.SetSecretAsync(inputValidator.GetVaultAddress(), secretName, secretValue, tags, contentType, inputValidator.GetSecretAttributes()).GetAwaiter().GetResult();
 
             Console.Out.WriteLine("Created/Updated secret:---------------");
             PrintoutSecret(secret);

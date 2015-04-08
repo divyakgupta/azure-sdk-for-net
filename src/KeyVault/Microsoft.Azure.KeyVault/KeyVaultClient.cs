@@ -766,7 +766,7 @@ namespace Microsoft.Azure.KeyVault
         /// <param name="secretAttributes">Attributes for the secret</param>     
         /// <param name="cancellationToken">Optional cancellation token</param> 
         /// <returns>A response message containing the updated secret</returns>
-        public async Task<Secret> SetSecretAsync(string vault, string secretName, SecureString value, Dictionary<string, string> tags = null, string contentType = null, SecretAttributes secretAttributes = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Secret> SetSecretAsync(string vault, string secretName, string value, Dictionary<string, string> tags = null, string contentType = null, SecretAttributes secretAttributes = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(vault))
                 throw new ArgumentNullException("vault");
@@ -981,10 +981,10 @@ namespace Microsoft.Azure.KeyVault
                         {
                             Code = "Unknown",
                             Message = string.Format(
-                                "HTTP {0} Error: {1}, Reason: {2} ",
-                                cloudException.Response.StatusCode.ToString(),
-                                errorText,
-                                cloudException.Response.ReasonPhrase),
+                                "HTTP {0}: {1}. Details: {2}",
+                                cloudException.Response.StatusCode.ToString(),                                
+                                cloudException.Response.ReasonPhrase,
+                                errorText),
                         },
                     };
                 }
@@ -1052,12 +1052,12 @@ namespace Microsoft.Azure.KeyVault
             return new KeyOpRequestMessageWithRawJsonContent { RawJsonRequest = JsonConvert.SerializeObject(request) };
         }
 
-        private static SecretRequestMessageWithRawJsonContent CreateSecretRequest(SecureString value,
+        private static SecretRequestMessageWithRawJsonContent CreateSecretRequest(string value,
             Dictionary<string, string> tags, string contentType, SecretAttributes secretAttributes)
         {
             var request = new Secret
             {
-                Value = value.ConvertToString(),
+                Value = value,
                 ContentType = contentType,
                 Tags = tags,
                 Attributes = secretAttributes
