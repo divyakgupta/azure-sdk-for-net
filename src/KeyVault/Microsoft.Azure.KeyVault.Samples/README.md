@@ -44,10 +44,13 @@ Such applications typically require credentials in their service configuration, 
 1. Create a new X509 certificate or get an existing one to use as the Key Vault authentication certificate. To create a new X509 certificate, [makecert][8] or [openssl][3] can be used. For example the following commands will generate a certificate file from a private key and a certificate signing request file:
 	- openssl [genrsa][4] -des3 -out keyvault.key 2048
 	- openssl [req][5] -new -key keyvault.key -out keyvault.csr
-	- openssl [x509][6] -req -days 3000 -in keyvault.csr -signkey keyvault.key -out keyvault.crt
-	- openssl [pkcs12][7] -export -out keyvault.pfx -inkey keyvault.key -in keyvault.crt
-2. Upload the certificate to the service. For instructions see [service certificate][9].
-3. Update the service configuration settings in ServiceConfiguration.Cloud.cscfg by providing:
+		- *Note: It is OK to choose the default answer for each question*
+	- openssl [x509][6] -req -days 3000 -in keyvault.csr -signkey keyvault.key -out keyvault.cer
+		- *Note:  The keyvault.cer file is a required input to the GetServiceConfigSettings.ps1 script* 
+	- openssl [pkcs12][7] -export -out keyvault.pfx -inkey keyvault.key -in keyvault.cer
+1. Create a new Azure cloud service in the [Azure management portal][10].  Upload the PFX file for the certificate you just created into the certificate tab for the cloud service. For instructions see [service certificate][9].
+1. Create a new Azure storage account in the [Azure management portal][10].  Remember the storage account name -- you'll need it as an input parameter for the GetServiceConfigSettings.ps1 script.
+1. Update the service configuration settings in ServiceConfiguration.Cloud.cscfg by providing:
 	- Key Vault authentication certificate thumbprint (you can find the thumbprint in the 'detailed' tab of the certificate).
 	- Name of the storage account to store messages in.
 	- URI to a Key Vault secret, containing a storage account key. 
@@ -60,7 +63,7 @@ Such applications typically require credentials in their service configuration, 
 	 3. Run the GetServiceConfigSettings.ps1 script within the Microsoft Azure PowerShell window
 	 4. Copy the results of the script into both CSCFG files in the project
 
-4. To deploy the service to the cloud, log into Azure portal and create a Cloud Service. Upload the certificate to this service.
+1. To deploy the service to the cloud, log into Azure portal and create a Cloud Service. Upload the certificate to this service.
 
 #####Running the sample application
 Once the setup steps are completed, enter the values into the ServiceConfiguration.Cloud.cscfg. Build and publish the web service to Azure, to the cloud service created above which has the authentication certificate.
@@ -80,3 +83,4 @@ Now go back to the Azure portal and regenerate the storage account keys. The web
 [7]: https://www.openssl.org/docs/apps/pkcs12.html
 [8]: http://msdn.microsoft.com/en-us/library/vstudio/bfsktky3(v=vs.100).aspx
 [9]: http://msdn.microsoft.com/en-us/library/azure/gg981929.aspx
+[10]: http://manage.windowsazure.com
