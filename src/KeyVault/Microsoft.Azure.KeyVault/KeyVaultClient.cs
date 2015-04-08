@@ -981,10 +981,10 @@ namespace Microsoft.Azure.KeyVault
                         {
                             Code = "Unknown",
                             Message = string.Format(
-                                "HTTP {0} Error: {1}, Reason: {2} ",
-                                cloudException.Response.StatusCode.ToString(),
-                                errorText,
-                                cloudException.Response.ReasonPhrase),
+                                "HTTP {0}: {1}. Details: {2}".,
+                                cloudException.Response.StatusCode.ToString(),                                
+                                cloudException.Response.ReasonPhrase,
+                                errorText),
                         },
                     };
                 }
