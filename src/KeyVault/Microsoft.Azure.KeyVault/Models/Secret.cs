@@ -40,7 +40,7 @@ namespace Microsoft.Azure.KeyVault
         public string Value { get; set; }
 
         /// <summary>
-        /// The secret value 
+        /// The content type of the secret
         /// </summary>
         [DataMember(Name = Property_ContentType, IsRequired = false)]
         public string ContentType { get; set; }

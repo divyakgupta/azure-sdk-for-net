@@ -271,33 +271,9 @@ namespace Microsoft.Azure.KeyVault
     [JsonObject]
     public class VerifyResponseMessage
     {
-        [JsonIgnore]
-        private bool _value;
-
         // true if signature was verified, false otherwise.
-        [JsonProperty( DefaultValueHandling = DefaultValueHandling.Include, NullValueHandling = NullValueHandling.Include, PropertyName = MessagePropertyNames.Result, Required = Required.Default )]
-        public bool Result
-        {
-            get { return _value; }
-            set { _value = value; }
-        }
-
-        [JsonProperty( DefaultValueHandling = DefaultValueHandling.Include, NullValueHandling = NullValueHandling.Include, PropertyName = MessagePropertyNames.Value, Required = Required.Default )]
-        public bool Value
-        {
-            get { return _value; }
-            set { _value = value; }
-        }
-
-        public bool ShouldSerializeResult()
-        {
-            return false;
-        }
-
-        public bool ShouldSerializeValue()
-        {
-            return true;
-        }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore, PropertyName = MessagePropertyNames.Value, Required = Required.Always)]
+        public bool Value;       
     }
 
     #endregion
